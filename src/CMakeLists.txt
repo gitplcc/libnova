@@ -1,4 +1,6 @@
-set(HEADER_PATH ${libnova_SOURCE_DIR}/src/${LIBRARY_NAME})
+add_subdirectory(elp)
+
+set(HEADER_PATH ${LIBNOVA_SOURCE_DIR}/src/${LIBRARY_NAME})
 
 set(LIBRARY_PUBLIC_HEADERS
 	${HEADER_PATH}/julian_day.h
@@ -73,6 +75,7 @@ add_library(${LIBRARY_NAME}
 	parallax.c
 	airmass.c
 	heliocentric_time.c
+  $<TARGET_OBJECTS:elp>
 )
 
 if(MSVC)

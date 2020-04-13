@@ -1,8 +1,46 @@
-cmake_minimum_required(VERSION 2.8.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-project(libnova)
+project(LIBNOVA VERSION 0.16.0 LANGUAGES C)
 
-# define the name of the library
+include(CheckIncludeFile)
+include(CheckIncludeFiles)
+include(CheckSymbolExists)
+include(CheckStructHasMember)
+
+CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
+CHECK_INCLUDE_FILE(alloca.h HAVE_ALLOCA_H)
+check_symbol_exists(alloca alloca.h HAVE_ALLOCA)
+
+CHECK_INCLUDE_FILE(sys/time.h HAVE_SYS_TIME_H)
+CHECK_INCLUDE_FILES("time.h;sys/time.h" TIME_WITH_SYS_TIME)
+CHECK_STRUCT_HAS_MEMBER(tm tm_year sys/time.h TM_IN_SYS_TIME LANGUAGE C)
+check_symbol_exists(gettimeofday sys/time.h HAVE_GETTIMEOFDAY)
+check_symbol_exists(tzset time.h HAVE_TZSET)
+
+CHECK_INCLUDE_FILE(string.h HAVE_STRING_H)
+CHECK_INCLUDE_FILE(strings.h HAVE_STRINGS_H)
+check_symbol_exists(strchr string.h HAVE_STRCHR)
+check_symbol_exists(strpbrk string.h HAVE_STRPBRK)
+check_symbol_exists(strtol stdlib.h HAVE_STRTOL)
+check_symbol_exists(strtok_r string.h HAVE_STRTOK_R)
+
+check_symbol_exists(modf math.h HAVE_MODF)
+check_symbol_exists(pow math.h HAVE_POW)
+check_symbol_exists(sqrt math.h HAVE_SQRT)
+check_symbol_exists(cbrt math.h HAVE_CBRT)
+check_symbol_exists(round math.h HAVE_ROUND)
+check_symbol_exists(cosl math.h HAVE_COSL)
+check_symbol_exists(sinl math.h HAVE_SINL)
+check_symbol_exists(acosl math.h HAVE_ACOSL)
+check_symbol_exists(asinl math.h HAVE_ASINL)
+check_symbol_exists(atan2l math.h HAVE_ATAN2L)
+
+CHECK_INCLUDE_FILE(sys/stat.h HAVE_SYS_STAT_H)
+CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
+
+configure_file(config.h.in.cmake config.h)
+ 
+ # define the name of the library
 set(LIBRARY_NAME libnova)
 
 option(BUILD_SHARED_LIBRARY "Set to ON to build libnova as a shared library." ON)
@@ -65,7 +103,10 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
 endmacro(SETUP_EXECUTABLE EXECUTABLE_NAME)
 
 # add include directory to all projects
-include_directories(${libnova_SOURCE_DIR}/src)
+include_directories(
+  ${LIBNOVA_SOURCE_DIR}/src
+  ${LIBNOVA_BINARY_DIR}
+)
 
 # traverse the sub directories
 add_subdirectory(src)
