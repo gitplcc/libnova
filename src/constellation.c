@@ -16,6 +16,7 @@
  *  Copyright (C) 2015 Lukasz Komsta
  */
 
+#include <libnova/constellation.h>
 #include <libnova/lunar.h>
 #include <libnova/julian_day.h>
 #include <libnova/rise_set.h>

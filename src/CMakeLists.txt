@@ -38,6 +38,7 @@ set(LIBRARY_PUBLIC_HEADERS
 	${HEADER_PATH}/parallax.h
 	${HEADER_PATH}/airmass.h
 	${HEADER_PATH}/heliocentric_time.h
+	${HEADER_PATH}/constellation.h
 )
 
 add_library(${LIBRARY_NAME} 
@@ -75,6 +76,7 @@ add_library(${LIBRARY_NAME}
 	parallax.c
 	airmass.c
 	heliocentric_time.c
+	constellation.c
   $<TARGET_OBJECTS:elp>
 )
 

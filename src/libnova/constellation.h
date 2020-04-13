@@ -19,6 +19,8 @@
 #ifndef _LN_CONSTELLATION_H
 #define _LN_CONSTELLATION_H
 
+#include <libnova/ln_types.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
