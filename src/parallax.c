@@ -16,10 +16,12 @@
  *  Copyright (C) 2000 - 2005 Petr Kubanek
  */
 
-#include <math.h>
 #include <libnova/parallax.h>
 #include <libnova/utility.h>
 #include <libnova/sidereal_time.h>
+#include <libnova/earth.h>
+
+#include <math.h>
 
 /*! \fn void ln_get_parallax(struct ln_equ_posn *object, double au_distance, struct ln_lnlat_posn *observer, double height, double JD, struct ln_equ_posn *parallax);
 * \param object Object geocentric coordinates
