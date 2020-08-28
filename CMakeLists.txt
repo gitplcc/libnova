@@ -64,7 +64,6 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2 /GS-")
 endif(MSVC)
 
-
 # set the debug postfix
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 
@@ -79,7 +78,6 @@ if(NOT DEFINED LIB_POSTFIX)
     set(LIB_POSTFIX "")
 endif(NOT DEFINED LIB_POSTFIX)
 
-
 # set and create the EXECUTABLE_OUTPUT_PATH
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
@@ -87,7 +85,6 @@ file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 # set and create the LIBRARY_OUTPUT_PATH
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_PATH})
-
 
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
