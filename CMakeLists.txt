@@ -39,18 +39,16 @@ CHECK_INCLUDE_FILE(sys/stat.h HAVE_SYS_STAT_H)
 CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 
 configure_file(config.h.in.cmake config.h)
- 
+
  # define the name of the library
 set(LIBRARY_NAME libnova)
 
-option(BUILD_SHARED_LIBRARY "Set to ON to build libnova as a shared library." ON)
-if(BUILD_SHARED_LIBRARY)
-    set(BUILD_SHARED_LIBS TRUE)
+option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
+if(BUILD_SHARED_LIBS)
     add_definitions(-DLIBNOVA_SHARED)
-else(BUILD_SHARED_LIBRARY)
-    set(BUILD_SHARED_LIBS FALSE)
+else(BUILD_SHARED_LIBS)
     add_definitions(-DLIBNOVA_STATIC)
-endif(BUILD_SHARED_LIBRARY)
+endif(BUILD_SHARED_LIBS)
 
 # add some definitions
 if(WIN32)

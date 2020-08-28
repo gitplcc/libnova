@@ -81,11 +81,11 @@ add_library(${LIBRARY_NAME}
 )
 
 if(MSVC)
-    if(BUILD_SHARED_LIBRARY)
+    if(BUILD_SHARED_LIBS)
         set_target_properties(${LIBRARY_NAME} PROPERTIES PREFIX "../../bin/" IMPORT_PREFIX "../")
-    else(BUILD_SHARED_LIBRARY)
+    else(BUILD_SHARED_LIBS)
         set_target_properties(${LIBRARY_NAME} PROPERTIES PREFIX "../")
-    endif(BUILD_SHARED_LIBRARY)
+    endif(BUILD_SHARED_LIBS)
 endif(MSVC)
 
 
