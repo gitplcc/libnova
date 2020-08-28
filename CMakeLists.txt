@@ -45,6 +45,7 @@ set(LIBRARY_NAME libnova)
 
 option(BUILD_EXAMPLES "Enable building examples." OFF)
 option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
+option(BUILD_TESTS "Build tests and run." OFF)
 option(BUILD_TOOLS "Enable building tools." OFF)
 
 # add some definitions
@@ -108,10 +109,15 @@ include_directories(
 
 # traverse the sub directories
 add_subdirectory(src)
-add_subdirectory(lntest)
+
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
+
+if(BUILD_TESTS)
+    add_subdirectory(lntest)
+endif(BUILD_TESTS)
+
 if(BUILD_TOOLS)
     add_subdirectory(tools)
 endif(BUILD_TOOLS)
