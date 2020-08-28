@@ -115,7 +115,7 @@ file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_PATH})
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_NAME}.c)
-    target_link_libraries(${EXECUTABLE_NAME} libnova)
+    target_link_libraries(${EXECUTABLE_NAME} libnova $<$<PLATFORM_ID:UNIX>:m>)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
     if(MSVC)
         set_target_properties(${EXECUTABLE_NAME} PROPERTIES PREFIX "../")
