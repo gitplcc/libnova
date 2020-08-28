@@ -43,14 +43,16 @@ configure_file(config.h.in.cmake config.h)
  # define the name of the library
 set(LIBRARY_NAME libnova)
 
+option(BUILD_EXAMPLES "Enable building examples." OFF)
 option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
+
+# add some definitions
 if(BUILD_SHARED_LIBS)
     add_definitions(-DLIBNOVA_SHARED)
 else(BUILD_SHARED_LIBS)
     add_definitions(-DLIBNOVA_STATIC)
 endif(BUILD_SHARED_LIBS)
 
-# add some definitions
 if(WIN32)
     add_definitions(-D_USE_MATH_DEFINES)
     add_definitions(-D_SCL_SECURE_NO_WARNINGS)
@@ -106,4 +108,6 @@ include_directories(
 # traverse the sub directories
 add_subdirectory(src)
 add_subdirectory(lntest)
-add_subdirectory(examples)
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif(BUILD_EXAMPLES)
