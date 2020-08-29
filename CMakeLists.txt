@@ -6,6 +6,9 @@ include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
+include(CMakeDependentOption)
+
+find_package(Doxygen)
 
 CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
 CHECK_INCLUDE_FILE(alloca.h HAVE_ALLOCA_H)
@@ -43,6 +46,10 @@ configure_file(config.h.in.cmake config.h)
  # define the name of the library
 set(LIBRARY_NAME libnova)
 
+CMAKE_DEPENDENT_OPTION(BUILD_DOCS
+  "Enable building documents." OFF
+  "DOXYGEN_FOUND" OFF
+)
 option(BUILD_EXAMPLES "Enable building examples." OFF)
 option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
 option(BUILD_TESTS "Build tests and run." OFF)
@@ -121,3 +128,7 @@ endif(BUILD_TESTS)
 if(BUILD_TOOLS)
     add_subdirectory(tools)
 endif(BUILD_TOOLS)
+
+if(BUILD_DOCS)
+    add_subdirectory(doc)
+endif(BUILD_DOCS)
