@@ -55,24 +55,31 @@ option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
 option(BUILD_TESTS "Build tests and run." OFF)
 option(BUILD_TOOLS "Enable building tools." OFF)
 
-# add some definitions
+# add some global definitions
 if(BUILD_SHARED_LIBS)
-    add_definitions(-DLIBNOVA_SHARED)
+    add_compile_definitions(LIBNOVA_SHARED)
 else(BUILD_SHARED_LIBS)
-    add_definitions(-DLIBNOVA_STATIC)
+    add_compile_definitions(LIBNOVA_STATIC)
 endif(BUILD_SHARED_LIBS)
 
 if(WIN32)
-    add_definitions(-D_USE_MATH_DEFINES)
-    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
-    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-    add_definitions(-D__WIN32__)
+    add_compile_definitions(
+        _USE_MATH_DEFINES
+        _SCL_SECURE_NO_WARNINGS
+        _CRT_SECURE_NO_DEPRECATE
+        __WIN32__
+    )
 endif(WIN32)
 
-# add more optimization flags to the visual studio release compilation
+# add more global optimization flags to the visual studio release compilation
 if(MSVC)
-    set(CMAKE_CXX_FLAGS_RELEASE "/MD /Ox /Ob2 /D NDEBUG")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2 /GS-")
+    add_compile_options(
+        /arch:AVX
+        /GS-
+        $<$<CONFIG:Release>:/MD>
+        $<$<CONFIG:Release>:/Ox>
+        $<$<CONFIG:Release>:/Ob2>
+    )
 endif(MSVC)
 
 # set the debug postfix
