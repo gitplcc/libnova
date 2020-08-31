@@ -798,24 +798,20 @@ char *strtok_r(char *str, const char *sep, char **last)
 #endif /* __WIN32__ */
 
 /* C89 substitutions for C99 functions. */
-#ifdef __C89_SUB__
-
+#ifndef HAVE_CBRT
 /* Simple cube root */
 double cbrt(double x)
 {
     return pow(x, 1.0 / 3.0);
 }
+#endif /* !HAVE_CBRT */
 
-#endif /* __C89_SUB__ */
-
-#if defined(__WIN32__) || defined(sun) || defined(__C89_SUB__)
-
+#ifndef HAVE_NAN
 /* Not a Number function generator */
-double nan(const char *code)
+double nan(const char* code)
 {
     double zero = 0.0;
 
     return zero / 0.0;
 }
-
-#endif /* defined(__WIN32__) || defined(sun) || defined(__C89_SUB__) */
+#endif /* !HAVE_NAN */

@@ -25,6 +25,7 @@
 #cmakedefine HAVE_ACOSL 1
 #cmakedefine HAVE_ASINL 1
 #cmakedefine HAVE_ATAN2L 1
+#cmakedefine HAVE_NAN 1
 
 #cmakedefine HAVE_SYS_STAT_H 1
 #cmakedefine HAVE_DLFCN_H 1

@@ -19,8 +19,10 @@
 #ifndef _LN_TYPES_H
 #define _LN_TYPES_H
 
-#if !defined(__WIN32__) && (defined(__WIN32) || defined(WIN32))
+#if defined(__WIN32__) || defined(__WIN32) || defined(WIN32)
+#if !defined(__WIN32__)
 #define __WIN32__
+#endif
 #define ALIGN32
 #else
 #define ALIGN32 __attribute__((aligned(32)))
