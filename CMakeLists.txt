@@ -9,6 +9,7 @@ include(CheckStructHasMember)
 include(CMakeDependentOption)
 
 find_package(Doxygen)
+find_program(CCACHE_PROGRAM ccache)
 
 CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
 CHECK_INCLUDE_FILE(alloca.h HAVE_ALLOCA_H)
@@ -46,6 +47,13 @@ configure_file(config.h.in.cmake config.h)
  # define the name of the library
 set(LIBRARY_NAME libnova)
 
+CMAKE_DEPENDENT_OPTION(BUILD_USING_CCACHE
+  "Enable using ccache for speed up compilation." OFF
+  "CCACHE_PROGRAM" OFF
+)
+if(CCACHE_PROGRAM)
+    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+endif()
 CMAKE_DEPENDENT_OPTION(BUILD_DOCS
   "Enable building documents." OFF
   "DOXYGEN_FOUND" OFF
