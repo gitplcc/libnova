@@ -12,18 +12,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  
+ *
  *  Copyright (C) 2000 - 2005 Liam Girdwood <lgirdwood@gmail.com>
  */
 
-#include <math.h>
-#include <stdio.h>
+#include "config.h"
+
 #include <libnova/solar.h>
 #include <libnova/earth.h>
 #include <libnova/nutation.h>
 #include <libnova/transform.h>
 #include <libnova/rise_set.h>
 #include <libnova/utility.h>
+
+#include <stdio.h>
+#include <math.h>
 
 /*! \fn void ln_get_solar_geom_coords(double JD, struct ln_helio_posn *position)
 * \param JD Julian day
@@ -37,13 +40,13 @@
 */
 
 void ln_get_solar_geom_coords(double JD, struct ln_helio_posn *position)
-{		
-	/* get earths heliocentric position */
-	ln_get_earth_helio_coords(JD, position);
+{
+    /* get earths heliocentric position */
+    ln_get_earth_helio_coords(JD, position);
 
-	position->L += 180.0;
-	position->L = ln_range_degrees(position->L);
-	position->B *= -1.0;
+    position->L += 180.0;
+    position->L = ln_range_degrees(position->L);
+    position->B *= -1.0;
 }
 
 /*! \fn void ln_get_solar_equ_coords(double JD, struct ln_equ_posn *position)
@@ -51,30 +54,30 @@ void ln_get_solar_geom_coords(double JD, struct ln_helio_posn *position)
 * \param position Pointer to store calculated solar position.
 *
 * Calculate apparent equatorial solar coordinates for given julian day.
-* This function includes the effects of aberration and nutation. 
+* This function includes the effects of aberration and nutation.
 */
 void ln_get_solar_equ_coords(double JD, struct ln_equ_posn *position)
 {
-	struct ln_helio_posn sol;
-	struct ln_lnlat_posn LB;
-	struct ln_nutation nutation;
-	double aberration;
-	
-	/* get geometric coords */
-	ln_get_solar_geom_coords(JD, &sol);
-	
-	/* add nutation */
-	ln_get_nutation(JD, &nutation);
-	sol.L += nutation.longitude;
+    struct ln_helio_posn sol;
+    struct ln_lnlat_posn LB;
+    struct ln_nutation nutation;
+    double aberration;
 
-	/* aberration */
-	aberration = (20.4898 / (360.0 * 60.0 * 60.0)) / sol.R;
-	sol.L -= aberration;
-	
-	/* transform to equatorial */
-	LB.lat = sol.B;
-	LB.lng = sol.L;
-	ln_get_equ_from_ecl(&LB, JD, position);
+    /* get geometric coords */
+    ln_get_solar_geom_coords(JD, &sol);
+
+    /* add nutation */
+    ln_get_nutation(JD, &nutation);
+    sol.L += nutation.longitude;
+
+    /* aberration */
+    aberration = (20.4898 / (360.0 * 60.0 * 60.0)) / sol.R;
+    sol.L -= aberration;
+
+    /* transform to equatorial */
+    LB.lat = sol.B;
+    LB.lng = sol.L;
+    ln_get_equ_from_ecl(&LB, JD, position);
 }
 
 /*! \fn void ln_get_solar_ecl_coords(double JD, struct ln_lnlat_posn *position)
@@ -82,27 +85,27 @@ void ln_get_solar_equ_coords(double JD, struct ln_equ_posn *position)
 * \param position Pointer to store calculated solar position.
 *
 * Calculate apparent ecliptical solar coordinates for given julian day.
-* This function includes the effects of aberration and nutation. 
+* This function includes the effects of aberration and nutation.
 */
 void ln_get_solar_ecl_coords(double JD, struct ln_lnlat_posn *position)
 {
-	struct ln_helio_posn sol;
-	struct ln_nutation nutation;
-	double aberration;
-	
-	/* get geometric coords */
-	ln_get_solar_geom_coords(JD, &sol);
-	
-	/* add nutation */
-	ln_get_nutation(JD, &nutation);
-	sol.L += nutation.longitude;
+    struct ln_helio_posn sol;
+    struct ln_nutation nutation;
+    double aberration;
 
-	/* aberration */
-	aberration = (20.4898 / (360.0 * 60.0 * 60.0)) / sol.R;
-	sol.L -= aberration;
-	
-	position->lng = sol.L;
-	position->lat = sol.B;
+    /* get geometric coords */
+    ln_get_solar_geom_coords(JD, &sol);
+
+    /* add nutation */
+    ln_get_nutation(JD, &nutation);
+    sol.L += nutation.longitude;
+
+    /* aberration */
+    aberration = (20.4898 / (360.0 * 60.0 * 60.0)) / sol.R;
+    sol.L -= aberration;
+
+    position->lng = sol.L;
+    position->lat = sol.B;
 }
 
 /*! \fn void ln_get_solar_geo_coords(double JD, struct ln_rect_posn *position)
@@ -114,23 +117,23 @@ void ln_get_solar_ecl_coords(double JD, struct ln_lnlat_posn *position)
 * Position returned is in units of AU.
 */
 void ln_get_solar_geo_coords(double JD, struct ln_rect_posn *position)
-{		
-	/* get earths's heliocentric position */
-	struct ln_helio_posn sol;
-	ln_get_earth_helio_coords(JD, &sol);
-	
-	/* now get rectangular coords */
-	ln_get_rect_from_helio(&sol, position);
-	position->X *=-1.0;
-	position->Y *=-1.0;
-	position->Z *=-1.0;
+{
+    /* get earths's heliocentric position */
+    struct ln_helio_posn sol;
+    ln_get_earth_helio_coords(JD, &sol);
+
+    /* now get rectangular coords */
+    ln_get_rect_from_helio(&sol, position);
+    position->X *=-1.0;
+    position->Y *=-1.0;
+    position->Z *=-1.0;
 }
 
 int ln_get_solar_rst_horizon(double JD, struct ln_lnlat_posn *observer,
-	double horizon, struct ln_rst_time *rst)
+    double horizon, struct ln_rst_time *rst)
 {
-	return ln_get_body_rst_horizon(JD, observer, ln_get_solar_equ_coords,
-		horizon, rst);
+    return ln_get_body_rst_horizon(JD, observer, ln_get_solar_equ_coords,
+        horizon, rst);
 }
 
 
@@ -139,29 +142,29 @@ int ln_get_solar_rst_horizon(double JD, struct ln_lnlat_posn *observer,
  */
 
 int ln_get_solar_rst(double JD, struct ln_lnlat_posn *observer,
-	struct ln_rst_time *rst)
+    struct ln_rst_time *rst)
 {
-	return ln_get_solar_rst_horizon(JD, observer,
-		LN_SOLAR_STANDART_HORIZON, rst);
+    return ln_get_solar_rst_horizon(JD, observer,
+        LN_SOLAR_STANDART_HORIZON, rst);
 }
 
 /*! \fn double ln_get_solar_sdiam(double JD)
 * \param JD Julian day
 * \return Semidiameter in arc seconds
 *
-* Calculate the semidiameter of the Sun in arc seconds for the 
+* Calculate the semidiameter of the Sun in arc seconds for the
 * given julian day.
 */
 double ln_get_solar_sdiam(double JD)
 {
-	double So = 959.63; /* at 1 AU */
-	double dist;
-	
-	dist = ln_get_earth_solar_dist(JD);
-	return So / dist;
+    double So = 959.63; /* at 1 AU */
+    double dist;
+
+    dist = ln_get_earth_solar_dist(JD);
+    return So / dist;
 }
 
 /*! \example sun.c
- * 
- * Examples of how to use solar functions. 
+ *
+ * Examples of how to use solar functions.
  */

@@ -12,14 +12,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  
+ *
  *  Copyright (C) 2000 - 2005 Liam Girdwood  <lgirdwood@gmail.com>
  */
 
-#include <math.h>
+#include "config.h"
+
 #include <libnova/comet.h>
 #include <libnova/elliptic_motion.h>
 #include <libnova/parabolic_motion.h>
+
+#include <math.h>
 
 /*!
 * \fn double ln_get_ell_comet_mag(double JD, struct ln_ell_orbit *orbit, double g, double k)
@@ -27,29 +30,29 @@
 * \param orbit Orbital parameters
 * \param g Absolute magnitude
 * \param k Comet constant
-* \return The visual magnitude. 
+* \return The visual magnitude.
 *
 * Calculate the visual magnitude of a comet in an elliptical orbit.
 */
 double ln_get_ell_comet_mag(double JD, struct ln_ell_orbit *orbit, double g,
-	double k)
+    double k)
 {
-	double d, r;
-	double E,M;
-	
-	/* get mean anomaly */
-	if (orbit->n == 0)
-		orbit->n = ln_get_ell_mean_motion (orbit->a);
-	M = ln_get_ell_mean_anomaly(orbit->n, JD - orbit->JD);
-	
-	/* get eccentric anomaly */
-	E = ln_solve_kepler(orbit->e, M);
-	
-	/* get radius vector */
-	r = ln_get_ell_radius_vector(orbit->a, orbit->e, E);
-	d = ln_get_ell_body_solar_dist(JD, orbit);
-	
-	return g + 5.0 * log10(d) + k * log10(r);
+    double d, r;
+    double E,M;
+
+    /* get mean anomaly */
+    if (orbit->n == 0)
+        orbit->n = ln_get_ell_mean_motion (orbit->a);
+    M = ln_get_ell_mean_anomaly(orbit->n, JD - orbit->JD);
+
+    /* get eccentric anomaly */
+    E = ln_solve_kepler(orbit->e, M);
+
+    /* get radius vector */
+    r = ln_get_ell_radius_vector(orbit->a, orbit->e, E);
+    d = ln_get_ell_body_solar_dist(JD, orbit);
+
+    return g + 5.0 * log10(d) + k * log10(r);
 }
 
 /*!
@@ -58,26 +61,26 @@ double ln_get_ell_comet_mag(double JD, struct ln_ell_orbit *orbit, double g,
 * \param orbit Orbital parameters
 * \param g Absolute magnitude
 * \param k Comet constant
-* \return The visual magnitude. 
+* \return The visual magnitude.
 *
 * Calculate the visual magnitude of a comet in a parabolic orbit.
 */
 double ln_get_par_comet_mag(double JD, struct ln_par_orbit *orbit, double g,
-	double k)
+    double k)
 {
-	double d,r,t;
-	
-	/* time since perihelion */
-	t = JD - orbit->JD;
-	
-	/* get radius vector */
-	r = ln_get_par_radius_vector(orbit->q, t);
-	d = ln_get_par_body_solar_dist(JD, orbit);
+    double d,r,t;
 
-	return g + 5.0 * log10(d) + k * log10(r);
+    /* time since perihelion */
+    t = JD - orbit->JD;
+
+    /* get radius vector */
+    r = ln_get_par_radius_vector(orbit->q, t);
+    d = ln_get_par_body_solar_dist(JD, orbit);
+
+    return g + 5.0 * log10(d) + k * log10(r);
 }
 
 /*! \example comet.c
- * 
- * Examples of how to use comet functions. 
+ *
+ * Examples of how to use comet functions.
  */
