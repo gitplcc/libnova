@@ -80,14 +80,6 @@ add_library(${LIBRARY_NAME}
     $<TARGET_OBJECTS:elp>
 )
 
-if(MSVC)
-    if(BUILD_SHARED_LIBS)
-        set_target_properties(${LIBRARY_NAME} PROPERTIES PREFIX "../../bin/" IMPORT_PREFIX "../")
-    else(BUILD_SHARED_LIBS)
-        set_target_properties(${LIBRARY_NAME} PROPERTIES PREFIX "../")
-    endif(BUILD_SHARED_LIBS)
-endif(MSVC)
-
 # install stuff
 set(INSTALL_INCDIR include)
 set(INSTALL_BINDIR bin)

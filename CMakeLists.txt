@@ -105,22 +105,15 @@ if(NOT DEFINED LIB_POSTFIX)
     set(LIB_POSTFIX "")
 endif(NOT DEFINED LIB_POSTFIX)
 
-# set and create the EXECUTABLE_OUTPUT_PATH
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
-
-# set and create the LIBRARY_OUTPUT_PATH
-set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
-file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_PATH})
+# Allow in-tree target execution for PE/COFF systems
+file(MAKE_DIRECTORY bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_NAME}.c)
     target_link_libraries(${EXECUTABLE_NAME} libnova $<$<PLATFORM_ID:UNIX>:m>)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
-    if(MSVC)
-        set_target_properties(${EXECUTABLE_NAME} PROPERTIES PREFIX "../")
-    endif(MSVC)
     INSTALL(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
 endmacro(SETUP_EXECUTABLE EXECUTABLE_NAME)
 
