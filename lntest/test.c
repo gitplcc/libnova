@@ -16,19 +16,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 Copyright 2000 Liam Girdwood
 Copyright 2008-2009 Petr Kubanek*/
 
+#include "config.h"
+
 #include <libnova/libnova.h>
-#include <libnova/utility.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
+#if !HAVE_NANOSLEEP && !HAVE_USLEEP && HAVE_SLEEP
+#include <synchapi.h>
+#endif
+
 void test_milisleep(unsigned long ms)
 {
-#if defined(_WIN32) || defined(_WINDOWS)
-    Sleep(ms);
-#elif _POSIX_C_SOURCE >= 199309L
+#if HAVE_NANOSLEEP
     struct timespec delay;
     if (ms < 1000) {
         delay.tv_sec = 0;
@@ -40,8 +43,12 @@ void test_milisleep(unsigned long ms)
         delay.tv_nsec = 1000000 * rslt.rem;
     }
     nanosleep(&delay, NULL);
-#else
+#elif HAVE_USLEEP
     usleep(1000 * ms);
+#elif HAVE_SLEEP
+    Sleep(ms);
+#else
+#error Unsupported compiler.
 #endif
 }
 
