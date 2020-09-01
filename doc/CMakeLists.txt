@@ -4,3 +4,8 @@ doxygen_add_docs(docs
     ALL
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
+
+install(
+    DIRECTORY   ${CMAKE_CURRENT_BINARY_DIR}/html
+    DESTINATION ${CMAKE_INSTALL_DOCDIR}
+)

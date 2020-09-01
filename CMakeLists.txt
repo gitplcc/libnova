@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-project(LIBNOVA VERSION 0.16.0 LANGUAGES C)
+project(libnova VERSION 0.16.0 LANGUAGES C)
 
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 include(CMakeDependentOption)
+include(GNUInstallDirs)
 
 find_package(Doxygen)
 find_program(CCACHE_PROGRAM ccache)
@@ -45,19 +46,16 @@ CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 
 configure_file(config.h.in.cmake config.h)
 
- # define the name of the library
-set(LIBRARY_NAME libnova)
-
 CMAKE_DEPENDENT_OPTION(BUILD_USING_CCACHE
-  "Enable using ccache for speed up compilation." OFF
-  "CCACHE_PROGRAM" OFF
+    "Enable using ccache for speed up compilation." OFF
+    "CCACHE_PROGRAM" OFF
 )
 if(CCACHE_PROGRAM)
     set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
 endif()
 CMAKE_DEPENDENT_OPTION(BUILD_DOCS
-  "Enable building documents." OFF
-  "DOXYGEN_FOUND" OFF
+    "Enable building documents." OFF
+    "DOXYGEN_FOUND" OFF
 )
 option(BUILD_EXAMPLES "Enable building examples." OFF)
 option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
@@ -94,17 +92,6 @@ endif(MSVC)
 # set the debug postfix
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 
-# set LIB_POSTFIX
-if(UNIX AND NOT WIN32 AND NOT APPLE)
-  if(CMAKE_SIZEOF_VOID_P MATCHES "8")
-      set(LIB_POSTFIX "64" CACHE STRING "suffix for 32/64 dir placement")
-      mark_as_advanced(LIB_POSTFIX)
-  endif(CMAKE_SIZEOF_VOID_P MATCHES "8")
-endif(UNIX AND NOT WIN32 AND NOT APPLE)
-if(NOT DEFINED LIB_POSTFIX)
-    set(LIB_POSTFIX "")
-endif(NOT DEFINED LIB_POSTFIX)
-
 # Allow in-tree target execution for PE/COFF systems
 file(MAKE_DIRECTORY bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -112,15 +99,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_NAME}.c)
-    target_link_libraries(${EXECUTABLE_NAME} libnova $<$<PLATFORM_ID:UNIX>:m>)
+    target_link_libraries(${EXECUTABLE_NAME} nova $<$<PLATFORM_ID:UNIX>:m>)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
-    INSTALL(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
+    install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endmacro(SETUP_EXECUTABLE EXECUTABLE_NAME)
 
 # add include directory to all projects
 include_directories(
-  ${LIBNOVA_SOURCE_DIR}/src
-  ${LIBNOVA_BINARY_DIR}
+    ${libnova_SOURCE_DIR}/src
+    ${libnova_BINARY_DIR}
 )
 
 # traverse the sub directories
