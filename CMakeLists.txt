@@ -13,6 +13,8 @@ include(CheckStructHasMember)
 include(CMakeDependentOption)
 include(GNUInstallDirs)
 
+include(CTest)
+
 find_package(Doxygen)
 find_program(CCACHE_PROGRAM ccache)
 
@@ -73,7 +75,6 @@ CMAKE_DEPENDENT_OPTION(BUILD_DOCS
 )
 option(BUILD_EXAMPLES "Enable building examples." OFF)
 option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
-option(BUILD_TESTS "Build tests and run." OFF)
 option(BUILD_TOOLS "Enable building tools." OFF)
 
 # add more global optimization flags to the visual studio release compilation
@@ -123,9 +124,9 @@ if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
 
-if(BUILD_TESTS)
+if(BUILD_TESTING)
     add_subdirectory(lntest)
-endif(BUILD_TESTS)
+endif(BUILD_TESTING)
 
 if(BUILD_TOOLS)
     add_subdirectory(tools)
