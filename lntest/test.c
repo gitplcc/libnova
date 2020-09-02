@@ -26,7 +26,7 @@ Copyright 2008-2009 Petr Kubanek*/
 #include <time.h>
 
 #if !HAVE_NANOSLEEP && !HAVE_USLEEP && HAVE_SLEEP
-#include <synchapi.h>
+#include <Windows.h>
 #endif
 
 void test_milisleep(unsigned long ms)

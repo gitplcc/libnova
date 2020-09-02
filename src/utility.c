@@ -39,26 +39,30 @@
 
 #include "config.h"
 
+#include <libnova/libnova.h>
+#include <libnova/utility.h>
+
+#if HAVE_STDBOOL_H
+#include <stdbool.h>
+#else
+typedef int bool;
+#define true 1
+#define false 0
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
-#include <libnova/libnova.h>
 
-#ifndef __APPLE__
+#if HAVE_ALLOCA_H
+#include <alloca.h>
+#elif HAVE_MALLOC_H
 #include <malloc.h>
 #endif
 
-/* Include unistd.h only if not on a Win32 platform */
-/* Include Win32 Headers sys/types.h and sys/timeb.h if on Win32 */
-#ifndef __WIN32__
-#include <unistd.h>
-#else
-#include <sys/types.h>
-#include <sys/timeb.h>
-#endif
+#include "implementation.h"
 
 /* Conversion factors between degrees and radians */
 #define D2R  (1.7453292519943295769e-2)  /* deg->radian */
@@ -439,13 +443,6 @@ double ln_get_light_time(double dist)
     return dist * 0.005775183;
 }
 
-
-/* local types and macros */
-typedef int BOOL;
-#define TRUE 1
-#define FALSE 0
-#define iswhite(c)  ((c)== ' ' || (c)=='\t')
-
 /*
 []------------------------------------------------------------------------[]
 |  trim() & strip()                                                        |
@@ -461,7 +458,7 @@ static char *trim(char *x)
     if(!x)
         return(x);
     y = x + strlen(x)-1;
-    while (y >= x && isspace(*y))
+    while (y >= x && isblank(*y))
         *y-- = 0; /* skip white space */
     return x;
 }
@@ -477,7 +474,7 @@ static char *trim(char *x)
 */
 static void skipwhite(char **s)
 {
-   while (iswhite(**s))
+   while (isblank(**s))
         (*s)++;
 }
 
@@ -518,7 +515,7 @@ static void skipwhite(char **s)
 double ln_get_dec_location(char *s)
 {
     char *ptr, *dec, *hh, *ame, *tok_ptr;
-    BOOL negative = FALSE;
+    bool negative = false;
     char delim1[] = " :.,;DdHhMm'\n\t";
     char delim2[] = " NSEWnsew\"\n\t";
     int dghh = 0, minutes = 0;
@@ -539,17 +536,17 @@ double ln_get_dec_location(char *s)
     trim(ptr);
     skipwhite(&ptr);
     if (*ptr == '+' || *ptr == '-')
-    negative = (char) (*ptr++ == '-' ? TRUE : negative);
+    negative = (char) (*ptr++ == '-' ? true : negative);
 
     /* the last letter has precedence over the sign */
     if (strpbrk(ptr,"SsWw") != NULL)
-    negative = TRUE;
+    negative = true;
 
     skipwhite(&ptr);
     if ((hh = strpbrk(ptr,"Hh")) != NULL && hh < ptr + 3) {
     type = HOURS;
     if (negative) /* if RA no negative numbers */
-        negative = FALSE;
+        negative = false;
     } else if ((ame = strpbrk(ptr,"SsNn")) != NULL) {
         type = LAT;
         if (ame == ptr) /* the North/South found before data */
@@ -578,7 +575,7 @@ double ln_get_dec_location(char *s)
     if ((ptr = strtok(NULL," \n\t")) != NULL) {
         skipwhite(&ptr);
         if (*ptr == 'S' || *ptr == 'W' || *ptr == 's' || *ptr == 'w')
-            negative = TRUE;
+            negative = true;
     }
 
     pos = dghh + minutes /60.0 + seconds / 3600.0;
@@ -586,7 +583,7 @@ double ln_get_dec_location(char *s)
         return -0.0;
     if (type == LAT && pos > 90.0)
         return -0.0;
-    if (negative == TRUE)
+    if (negative == true)
         pos = 0.0 - pos;
 
     return pos;
@@ -747,71 +744,3 @@ double ln_find_max(double (*func) (double, double *),
 
     return (xu + xl) * 0.5;
 }
-
-/* This section is for Win32 substitutions. */
-#ifdef __WIN32__
-#ifndef __MINGW__
-
-/* Catches calls to the POSIX gettimeofday and converts them to a related WIN32 version. */
-int gettimeofday(struct timeval *tv, struct timezone *tz)
-{
-    struct _timeb timeptr;
-
-    _ftime_s (&timeptr);
-
-    tv->tv_sec = timeptr.time;
-    tv->tv_usec = timeptr.millitm * 1000;
-
-    tz->tz_dsttime = timeptr.dstflag;
-    tz->tz_dsttime = timeptr.timezone;
-
-    return 0;
-}
-#endif // !__MINGW__
-
-/* Catches calls to the POSIX gmtime_r and converts them to a related WIN32 version. */
-struct tm *gmtime_r(time_t *t, struct tm *gmt)
-{
-#ifndef __MINGW__
-    gmtime_s(gmt, t);
-#else
-    struct tm *local_gmt;
-    local_gmt = gmtime(t);
-
-    if (local_gmt != 0)
-        memcpy(gmt, local_gmt, sizeof (gmt));
-#endif // !__MINGW__
-
-    return gmt;
-}
-
-/* Catches calls to the POSIX strtok_r and converts them to a related WIN32 version. */
-char *strtok_r(char *str, const char *sep, char **last)
-{
-#ifndef __MINGW__
-    return strtok_s(str, sep, last);
-#else
-    return strtok(str, sep);
-#endif // !__MINGW__
-}
-
-#endif /* __WIN32__ */
-
-/* C89 substitutions for C99 functions. */
-#ifndef HAVE_CBRT
-/* Simple cube root */
-double cbrt(double x)
-{
-    return pow(x, 1.0 / 3.0);
-}
-#endif /* !HAVE_CBRT */
-
-#ifndef HAVE_NAN
-/* Not a Number function generator */
-double nan(const char* code)
-{
-    double zero = 0.0;
-
-    return zero / 0.0;
-}
-#endif /* !HAVE_NAN */

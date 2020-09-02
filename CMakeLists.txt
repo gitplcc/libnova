@@ -24,7 +24,9 @@ check_symbol_exists(tzset time.h HAVE_TZSET)
 check_symbol_exists(gmtime_r time.h HAVE_GMTIME_R)
 check_symbol_exists(nanosleep time.h HAVE_NANOSLEEP)
 check_symbol_exists(usleep time.h HAVE_USLEEP)
-check_symbol_exists(Sleep synchapi.h HAVE_SLEEP)
+check_symbol_exists(Sleep Windows.h HAVE_SLEEP)
+
+CHECK_INCLUDE_FILE(stdbool.h HAVE_STDBOOL_H)
 
 CHECK_INCLUDE_FILE(string.h HAVE_STRING_H)
 CHECK_INCLUDE_FILE(strings.h HAVE_STRINGS_H)
@@ -32,6 +34,7 @@ check_symbol_exists(strchr string.h HAVE_STRCHR)
 check_symbol_exists(strpbrk string.h HAVE_STRPBRK)
 check_symbol_exists(strtol stdlib.h HAVE_STRTOL)
 check_symbol_exists(strtok_r string.h HAVE_STRTOK_R)
+check_symbol_exists(isblank ctype.h HAVE_ISBLANK)
 
 check_symbol_exists(modf math.h HAVE_MODF)
 check_symbol_exists(pow math.h HAVE_POW)

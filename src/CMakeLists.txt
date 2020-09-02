@@ -77,6 +77,7 @@ add_library(nova
     airmass.c
     heliocentric_time.c
     constellation.c
+    implementation.c
     $<TARGET_OBJECTS:elp>
 )
 

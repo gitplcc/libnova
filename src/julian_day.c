@@ -19,14 +19,14 @@
 #include "config.h"
 
 #include <libnova/julian_day.h>
-#include <libnova/utility.h>
+#include "implementation.h"
 
-#include <time.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
 
-#if !defined(__WIN32__) || defined(__MINGW__)
+#include <time.h>
+#if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #endif
 
@@ -200,7 +200,12 @@ void ln_get_date_from_sys(struct ln_date *date)
     gettimeofday(&tv, &tz);
 
     /* convert to UTC time representation */
+#if __MINGW64__
+    time_t buf = tv.tv_sec;
+    gmt = gmtime(&buf);
+#else
     gmt = gmtime(&tv.tv_sec);
+#endif
 
     /* fill in date struct */
     date->seconds = gmt->tm_sec + ((double)tv.tv_usec / 1000000);
@@ -287,25 +292,20 @@ double ln_get_julian_local_date(struct ln_zonedate* zonedate)
 void ln_get_local_date(double JD, struct ln_zonedate *zonedate)
 {
     struct ln_date date;
-#ifndef __WIN32__
     time_t curtime;
-    struct tm *loctime;
-#endif
+    time_t utctime;
+    time_t loctime;
+
+    //struct tm *loctime;
     long gmtoff;
 
     ln_get_date(JD, &date);
 
     /* add day light savings time and hour angle */
-#ifdef __WIN32__
-    _tzset();
-    gmtoff = _timezone;
-    if (_daylight)
-        gmtoff += 3600;
-#else
-    curtime = time (NULL);
-    loctime = localtime(&curtime);
-    gmtoff = loctime->tm_gmtoff;
-#endif
+    curtime = time(NULL);
+    utctime = mktime(gmtime(&curtime));
+    loctime = mktime(localtime(&curtime));
+    gmtoff = difftime(loctime, utctime);
     ln_date_to_zonedate(&date, zonedate, gmtoff);
 }
 

@@ -48,22 +48,21 @@
 #include <math.h>
 #include <ctype.h>
 
-#ifndef __APPLE__
+#if HAVE_ALLOCA_H
+#include <alloca.h>
+#elif HAVE_MALLOC_H
 #include <malloc.h>
 #endif
 
-/* Include unistd.h only if not on a Win32 platform */
-#ifndef __WIN32__
-#include <unistd.h>
+#if HAVE_STDBOOL_H
+#include <stdbool.h>
 #else
+typedef int bool;
+#define true 1
+#define false 0
+#endif
 
-/* local types and macros */
-typedef int BOOL;
-#define TRUE 1
-#define FALSE 0
-#define iswhite(c)  ((c)== ' ' || (c)=='\t')
-
-#endif  /* !__WIN32__ */
+#include "implementation.h"
 
 /*! \fn char *trim(char *x)
  * \param x Character which will be trimmed.
@@ -93,7 +92,7 @@ static inline char *trim(char *x)
  */
 static inline void skipwhite(char **s)
 {
-    while (iswhite(**s))
+    while (isblank(**s))
         (*s)++;
 }
 
@@ -134,7 +133,7 @@ static inline void skipwhite(char **s)
 double get_dec_location(char *s)
 {
     char *ptr, *dec, *hh;
-    BOOL negative = FALSE;
+    bool negative = false;
     char delim1[] = " :.,;�DdHhMm'\n\t";
     char delim2[] = " NSEWnsew\"\n\t";
     int dghh = 0, minutes = 0;
@@ -156,10 +155,10 @@ double get_dec_location(char *s)
 
     /* the last letter has precedence over the sign */
     if (strpbrk(ptr,"SsWw") != NULL)
-        negative = TRUE;
+        negative = true;
 
     if (*ptr == '+' || *ptr == '-')
-        negative = (char) (*ptr++ == '-' ? TRUE : negative);
+        negative = (char) (*ptr++ == '-' ? true : negative);
     skipwhite(&ptr);
     if ((hh = strpbrk(ptr,"Hh")) != NULL && hh < ptr + 3)
         type = HOURS;
@@ -192,7 +191,7 @@ double get_dec_location(char *s)
     if ((ptr = strtok(NULL," \n\t")) != NULL) {
         skipwhite(&ptr);
         if (*ptr == 'S' || *ptr == 'W' || *ptr == 's' || *ptr == 'w')
-            negative = TRUE;
+            negative = true;
         }
     pos = dghh + minutes /60.0 + seconds / 3600.0;
 

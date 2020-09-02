@@ -12,12 +12,15 @@
 #cmakedefine01 HAVE_USLEEP
 #cmakedefine01 HAVE_SLEEP
 
+#cmakedefine01 HAVE_STDBOOL_H
+
 #cmakedefine01 HAVE_STRING_H
 #cmakedefine01 HAVE_STRINGS_H
 #cmakedefine01 HAVE_STRCHR
 #cmakedefine01 HAVE_STRPBRK
 #cmakedefine01 HAVE_STRTOL
 #cmakedefine01 HAVE_STRTOK_R
+#cmakedefine01 HAVE_ISBLANK
 
 #cmakedefine01 HAVE_MODF
 #cmakedefine01 HAVE_POW

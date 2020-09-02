@@ -20,6 +20,7 @@
 #define _LN_JULIAN_DAY_H
 
 #include <libnova/ln_types.h>
+
 #include <time.h>
 
 #ifdef __cplusplus
