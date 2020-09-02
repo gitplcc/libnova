@@ -69,22 +69,6 @@ option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
 option(BUILD_TESTS "Build tests and run." OFF)
 option(BUILD_TOOLS "Enable building tools." OFF)
 
-# add some global definitions
-if(BUILD_SHARED_LIBS)
-    add_compile_definitions(LIBNOVA_SHARED)
-else(BUILD_SHARED_LIBS)
-    add_compile_definitions(LIBNOVA_STATIC)
-endif(BUILD_SHARED_LIBS)
-
-if(WIN32)
-    add_compile_definitions(
-        _USE_MATH_DEFINES
-        _SCL_SECURE_NO_WARNINGS
-        _CRT_SECURE_NO_DEPRECATE
-        __WIN32__
-    )
-endif(WIN32)
-
 # add more global optimization flags to the visual studio release compilation
 if(MSVC)
     add_compile_options(
@@ -106,6 +90,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_NAME}.c)
+    target_compile_definitions(${EXECUTABLE_NAME}
+        PRIVATE
+            $<IF:$<BOOL:BUILD_SHARED_LIBS>,LIBNOVA_SHARED,LIBNOVA_STATIC>
+            $<$<BOOL:WIN32>:_USE_MATH_DEFINES>
+            $<$<BOOL:WIN32>:_SCL_SECURE_NO_WARNINGS>
+            $<$<BOOL:WIN32>:_CRT_SECURE_NO_DEPRECATE>
+            $<$<BOOL:WIN32>:__WIN32__>
+    )
     target_link_libraries(${EXECUTABLE_NAME} nova $<$<PLATFORM_ID:UNIX>:m>)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
     install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
