@@ -11,3 +11,9 @@ target_include_directories(lntest
   PRIVATE "${PROJECT_SOURCE_DIR}/src"
 )
 target_link_libraries(lntest nova $<$<BOOL:UNIX>:m>)
+
+add_test(
+    NAME fulltest
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
+    COMMAND lntest
+)

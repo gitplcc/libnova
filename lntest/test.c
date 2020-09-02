@@ -2130,5 +2130,5 @@ int main(int argc, const char *argv[])
         fprintf(stdout, "Test completed: %d tests, %d errors.\n",
                 test_number, failed);
 
-        return 0;
+        return failed;
 }
