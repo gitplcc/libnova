@@ -33,7 +33,7 @@ extern "C" {
 * \ingroup constellations
 * \brief Returns name of the constellation at the given position
 */
-const char* LIBNOVA_EXPORT ln_get_constellation(struct ln_equ_posn *position);
+const char LIBNOVA_EXPORT *ln_get_constellation(struct ln_equ_posn *position);
 
 #ifdef __cplusplus
 };

@@ -12,16 +12,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  
+ *
  *  Copyright (C) 2000 - 2005 Liam Girdwood <lgirdwood@gmail.com>
  */
 
-#define LIBNOVA_VERSION "0.15.0"
+#define LIBNOVA_VERSION "0.16.0"
 
 /*! \mainpage libnova
 * \image html libnova-logo.jpg
 * Celestial Mechanics, Astrometry and Astrodynamics Library
-* 
+*
 * \section intro Introduction
 * libnova is a general purpose, double precision, Celestial Mechanics, Astrometry and Astrodynamics library.
 *
@@ -81,14 +81,14 @@
 * \section thanks Thanks
 * Thanks to Jean Meeus for most of the algorithms used in this library.
 * From his book "Astronomical Algorithms".
-* 
+*
 * Thanks to Michelle Chapront-Touze and Jean Chapront for publishing
 * the Lunar Solution ELP 2000-82B.
 *
-* Thanks to Messrs. Bretagnon and Francou for publishing planetary 
+* Thanks to Messrs. Bretagnon and Francou for publishing planetary
 * solution VSOP87.
 *
-* Also thanks to Sourceforge for hosting this project. <A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=57697&amp;type=5" width="210" height="62" border="0" alt="SourceForge Logo"></A> 
+* Also thanks to Sourceforge for hosting this project. <A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=57697&amp;type=5" width="210" height="62" border="0" alt="SourceForge Logo"></A>
 */
 
 #ifndef _LN_LIBNOVA_H

@@ -12,9 +12,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  
+ *
  *  Copyright (C) 2000 - 2005 Petr Kubanek
  */
+
+#include "config.h"
 
 #include <libnova/parallax.h>
 #include <libnova/utility.h>
@@ -36,14 +38,14 @@
 /* Equ 39.1, 39.2, 39.3 Pg 263 and 264
 */
 void ln_get_parallax(struct ln_equ_posn *object, double au_distance,
-	 struct ln_lnlat_posn *observer, double height, double JD,
-	 struct ln_equ_posn *parallax)
+     struct ln_lnlat_posn *observer, double height, double JD,
+     struct ln_equ_posn *parallax)
 {
-  	double H;
+    double H;
 
-	H = ln_get_apparent_sidereal_time(JD) +
-			(observer->lng - object->ra) / 15.0;
-	ln_get_parallax_ha(object, au_distance, observer, height, H, parallax);
+    H = ln_get_apparent_sidereal_time(JD) +
+        (observer->lng - object->ra) / 15.0;
+    ln_get_parallax_ha(object, au_distance, observer, height, H, parallax);
 }
 
 
@@ -61,28 +63,28 @@ void ln_get_parallax(struct ln_equ_posn *object, double au_distance,
 /* Equ 39.1, 39.2, 39.3 Pg 263 and 264
 */
 void ln_get_parallax_ha(struct ln_equ_posn *object, double au_distance,
-	 struct ln_lnlat_posn *observer, double height, double H,
-	 struct ln_equ_posn *parallax)
+     struct ln_lnlat_posn *observer, double height, double H,
+     struct ln_equ_posn *parallax)
 {
-	double sin_pi, ro_sin, ro_cos, sin_H, cos_H, dec_rad, cos_dec;
+    double sin_pi, ro_sin, ro_cos, sin_H, cos_H, dec_rad, cos_dec;
 
-	ln_get_earth_centre_dist (height, observer->lat, &ro_sin, &ro_cos);
-	sin_pi = sin(ln_deg_to_rad((8.794 / au_distance) / 3600.0));  // (39.1)
+    ln_get_earth_centre_dist (height, observer->lat, &ro_sin, &ro_cos);
+    sin_pi = sin(ln_deg_to_rad((8.794 / au_distance) / 3600.0));  // (39.1)
 
-	/* change hour angle from hours to radians*/
-	H *= M_PI / 12.0;
+    /* change hour angle from hours to radians*/
+    H *= M_PI / 12.0;
 
-	sin_H = sin(H);
-	cos_H = cos(H);
+    sin_H = sin(H);
+    cos_H = cos(H);
 
-	dec_rad = ln_deg_to_rad(object->dec);
-	cos_dec = cos(dec_rad);
-	
-	parallax->ra = atan2(-ro_cos * sin_pi * sin_H, cos_dec  - ro_cos *
-			sin_pi * cos_H); // (39.2)
-	parallax->dec = atan2((sin(dec_rad) - ro_sin * sin_pi) *
-			cos(parallax->ra), cos_dec - ro_cos * sin_pi * cos_H); // (39.3)
+    dec_rad = ln_deg_to_rad(object->dec);
+    cos_dec = cos(dec_rad);
 
-	parallax->ra = ln_rad_to_deg(parallax->ra);
-	parallax->dec = ln_rad_to_deg(parallax->dec) - object->dec;
+    parallax->ra = atan2(-ro_cos * sin_pi * sin_H, cos_dec  - ro_cos *
+                   sin_pi * cos_H); // (39.2)
+    parallax->dec = atan2((sin(dec_rad) - ro_sin * sin_pi) *
+                    cos(parallax->ra), cos_dec - ro_cos * sin_pi * cos_H); // (39.3)
+
+    parallax->ra = ln_rad_to_deg(parallax->ra);
+    parallax->dec = ln_rad_to_deg(parallax->dec) - object->dec;
 }
