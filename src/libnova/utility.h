@@ -238,4 +238,8 @@ double LIBNOVA_EXPORT ln_find_max(double (*func) (double, double *),
 double LIBNOVA_EXPORT ln_find_zero(double (*func) (double, double *),
         double from, double to, double *arg);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif
