@@ -12,14 +12,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  
+ *
  *  Copyright (C) 2000 - 2005 Petr Kubanek
  *  Copyright (C) 2011 Petr Kubanek, Institute of Physics <kubanek@fzu.cz>
  */
 
-#include <math.h>
+#include "config.h"
+
 #include <libnova/airmass.h>
 #include <libnova/utility.h>
+
+#include <math.h>
 
 /*
 ** Airmass
@@ -32,10 +35,10 @@
 */
 double ln_get_airmass(double alt, double airmass_scale)
 {
-	double a;
+    double a;
 
-	a = airmass_scale * sin(ln_deg_to_rad(alt));
-	return sqrt(a * a + 2 * airmass_scale + 1) - a;
+    a = airmass_scale * sin(ln_deg_to_rad(alt));
+    return sqrt(a * a + 2 * airmass_scale + 1) - a;
 }
 
 /*! \fn double ln_get_alt_from_airmass (double X, double airmass_scale)
@@ -45,6 +48,6 @@ double ln_get_airmass(double alt, double airmass_scale)
  */
 double ln_get_alt_from_airmass(double X, double airmass_scale)
 {
-	return ln_rad_to_deg(asin((2 * airmass_scale + 1 - X * X) /
-		(2 * X * airmass_scale)));
+    return ln_rad_to_deg(asin((2 * airmass_scale + 1 - X * X) /
+        (2 * X * airmass_scale)));
 }

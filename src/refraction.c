@@ -12,13 +12,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  
+ *
  *  Copyright (C) 2000 - 2005 Liam Girdwood <lgirdwood@gmail.com>
  */
 
-#include <math.h>
+#include "config.h"
+
 #include <libnova/refraction.h>
 #include <libnova/utility.h>
+
+#include <math.h>
 
 /*! \fn double ln_get_refraction_adj (double altitude, double atm_pres, double temp)
 * \param altitude The altitude of the object above the horizon in degrees
@@ -26,25 +29,25 @@
 * \param temp Temperature in degrees C.
 * \return Adjustment in objects altitude in degrees.
 *
-* Calculate the adjustment in altitude of a body due to atmosphric 
+* Calculate the adjustment in altitude of a body due to atmosphric
 * refraction. This value varies over altitude, pressure and temperature.
-* 
-* Note: Default values for pressure and teperature are 1010 mBar and 10C 
+*
+* Note: Default values for pressure and teperature are 1010 mBar and 10C
 * respectively.
 */
 double ln_get_refraction_adj(double altitude, double atm_pres, double temp)
 {
-	long double R;
+    long double R;
 
-	/* equ 16.3 */
-	R = 1.0 / tan(ln_deg_to_rad(altitude + (7.31 / (altitude + 4.4))));
-	R -= 0.06 * sin(ln_deg_to_rad(14.7 * (R / 60.0) + 13.0));
+    /* equ 16.3 */
+    R = 1.0 / tan(ln_deg_to_rad(altitude + (7.31 / (altitude + 4.4))));
+    R -= 0.06 * sin(ln_deg_to_rad(14.7 * (R / 60.0) + 13.0));
 
-	/* take into account of atm press and temp */
-	R *= ((atm_pres / 1010.0) * (283.0 / (273.0 + temp)));
-	
-	/* convert from arcminutes to degrees */
-	R /= 60.0;
-	
-	return R;
+    /* take into account of atm press and temp */
+    R *= ((atm_pres / 1010.0) * (283.0 / (273.0 + temp)));
+
+    /* convert from arcminutes to degrees */
+    R /= 60.0;
+
+    return R;
 }

@@ -191,25 +191,54 @@ int main(int argc, char *argv[])
 		fprintf(stdout, "opened output %s\n", file);
 
 		switch (elp.i) {
-		case 1 ... 3:
+		case 1:
+		case 2:
+		case 3:
 			main_parse(&elp, "main_problem ");
 			break;
-		case 4 ... 9:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
 			earth_parse(&elp, "earth_pert ");
 			break;
-		case 10 ... 21:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+		case 17:
+		case 18:
+		case 19:
+		case 20:
+		case 21:
 			planet_parse(&elp, "planet_pert ");
 			break;
-		case 22 ... 27:
+		case 22:
+		case 23:
+		case 24:
+		case 25:
+		case 26:
+		case 27:
 			earth_parse(&elp, "earth_pert ");
 			break;
-		case 28 ... 30:
+		case 28:
+		case 29:
+		case 30:
 			earth_parse(&elp, "earth_pert ");
 			break;
-		case 31 ... 33:
+		case 31:
+		case 32:
+		case 33:
 			earth_parse(&elp, "earth_pert ");
 			break;
-		case 34 ... 36:
+		case 34:
+		case 35:
+		case 36:
 			earth_parse(&elp, "earth_pert ");
 			break;
 		default:
