@@ -4,3 +4,4 @@ add_library(elp OBJECT
   elp21 elp22 elp23 elp24 elp25 elp26 elp27 elp28 elp29 elp30
   elp31 elp32 elp33 elp34 elp35 elp36
 )
+target_include_directories(elp PRIVATE ${PROJECT_SOURCE_DIR}/src)

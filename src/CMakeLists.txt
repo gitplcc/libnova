@@ -82,13 +82,23 @@ add_library(nova
     $<TARGET_OBJECTS:elp>
 )
 target_compile_definitions(nova
-    PRIVATE
+    PUBLIC
         $<IF:$<BOOL:BUILD_SHARED_LIBS>,LIBNOVA_SHARED,LIBNOVA_STATIC>
-        $<$<BOOL:WIN32>:_USE_MATH_DEFINES>
-        $<$<BOOL:WIN32>:_SCL_SECURE_NO_WARNINGS>
-        $<$<BOOL:WIN32>:_CRT_SECURE_NO_DEPRECATE>
-        $<$<BOOL:WIN32>:__WIN32__>
+    PRIVATE
+        $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>
+        $<$<BOOL:${WIN32}>:_SCL_SECURE_NO_WARNINGS>
+        $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
+        $<$<BOOL:${WIN32}>:__WIN32__>
 )
+target_include_directories(
+    nova
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+# Export stuff
+add_library(Libnova::nova ALIAS nova)
 
 # install stuff
 install(
