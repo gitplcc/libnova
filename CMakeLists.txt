@@ -100,13 +100,13 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_NAME}.c)
     target_compile_definitions(${EXECUTABLE_NAME}
         PRIVATE
-            $<IF:$<BOOL:BUILD_SHARED_LIBS>,LIBNOVA_SHARED,LIBNOVA_STATIC>
-            $<$<BOOL:WIN32>:_USE_MATH_DEFINES>
-            $<$<BOOL:WIN32>:_SCL_SECURE_NO_WARNINGS>
-            $<$<BOOL:WIN32>:_CRT_SECURE_NO_DEPRECATE>
-            $<$<BOOL:WIN32>:__WIN32__>
+            $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,LIBNOVA_SHARED,LIBNOVA_STATIC>
+            $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>
+            $<$<BOOL:${WIN32}>:_SCL_SECURE_NO_WARNINGS>
+            $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
+            $<$<BOOL:${WIN32}>:__WIN32__>
     )
-    target_link_libraries(${EXECUTABLE_NAME} nova $<$<BOOL:UNIX>:m>)
+    target_link_libraries(${EXECUTABLE_NAME} nova $<$<BOOL:${UNIX}>:m>)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
     install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endmacro(SETUP_EXECUTABLE EXECUTABLE_NAME)
