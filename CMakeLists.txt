@@ -108,8 +108,10 @@ endif(MSVC)
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 
 # Allow in-tree target execution for PE/COFF systems
-file(MAKE_DIRECTORY bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+if (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+    file(MAKE_DIRECTORY bin)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+endif (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
