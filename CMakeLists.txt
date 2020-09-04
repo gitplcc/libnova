@@ -11,6 +11,7 @@ include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CMakeDependentOption)
@@ -103,7 +104,7 @@ set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 
 # Allow in-tree target execution for PE/COFF systems
 file(MAKE_DIRECTORY bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
@@ -141,3 +142,38 @@ endif(BUILD_TOOLS)
 if(BUILD_DOCS)
     add_subdirectory(doc)
 endif(BUILD_DOCS)
+
+# Export stuff
+
+write_basic_package_version_file(
+    LibnovaConfigVersion.cmake
+    VERSION ${libnova_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+export(
+    EXPORT LibnovaTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/LibnovaTargets.cmake"
+    NAMESPACE Libnova::
+)
+configure_file(
+    cmake/LibnovaConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
+    COPYONLY
+)
+
+install(EXPORT LibnovaTargets
+    FILE
+        LibnovaTargets.cmake
+    NAMESPACE
+        Libnova::
+    DESTINATION
+        "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+)
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfigVersion.cmake"
+    DESTINATION
+        "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+)
