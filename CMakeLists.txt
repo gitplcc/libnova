@@ -11,12 +11,21 @@ include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 include(CheckCCompilerFlag)
+include(CMakeDependentOption)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    include(CMakeDependentOption)
-    include(CTest)
+
+    # Packaging support
+    set(CPACK_PACKAGE_VENDOR "Vendor name")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Celestial Mechanics, Astrometry and Astrodynamics Library")
+    set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+    set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+    set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
+    set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README")
+    include(CPack)
 
     ###########################################################################
     # Snippet from https://blog.kitware.com/cmake-and-the-default-build-type/
@@ -206,6 +215,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif(BUILD_EXAMPLES)
 
     if(BUILD_TESTING)
+        include(CTest)
+
         add_subdirectory(extern/Unity)
         target_compile_definitions(unity
             PUBLIC
