@@ -39,13 +39,13 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 else(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
-    set(BUILD_DOCS OFF CACHE BOOL "Enable building documents." FORCE)
-    set(BUILD_EXAMPLES OFF CACHE BOOL "Enable building examples." FORCE)
+    set(BUILD_DOCS OFF)
+    set(BUILD_EXAMPLES OFF)
     if(NOT DEFINED BUILD_SHARED_LIBS)
-        set(BUILD_SHARED_LIBS ON CACHE BOOL "Build libnova as a shared library." FORCE)
+        set(BUILD_SHARED_LIBS ON)
     endif(NOT DEFINED BUILD_SHARED_LIBS)
-    set(BUILD_TOOLS OFF CACHE BOOL "Enable building tools." FORCE)
-    set(BUILD_REGISTER_PKG OFF CACHE BOOL "Enable registering package in CMake registry." FORCE)
+    set(BUILD_TOOLS OFF)
+    set(BUILD_REGISTER_PKG OFF)
 
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
