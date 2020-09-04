@@ -35,13 +35,18 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     option(BUILD_EXAMPLES "Enable building examples." OFF)
     option(BUILD_SHARED_LIBS "Build libnova as a shared library." ON)
     option(BUILD_TOOLS "Enable building tools." OFF)
+    option(BUILD_REGISTER_PKG "Enable registering package in CMake registry." OFF)
+
 else(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+
     set(BUILD_DOCS OFF CACHE BOOL "Enable building documents." FORCE)
     set(BUILD_EXAMPLES OFF CACHE BOOL "Enable building examples." FORCE)
     if(NOT DEFINED BUILD_SHARED_LIBS)
         set(BUILD_SHARED_LIBS ON CACHE BOOL "Build libnova as a shared library." FORCE)
     endif(NOT DEFINED BUILD_SHARED_LIBS)
     set(BUILD_TOOLS OFF CACHE BOOL "Enable building tools." FORCE)
+    set(BUILD_REGISTER_PKG OFF CACHE BOOL "Enable registering package in CMake registry." FORCE)
+
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
@@ -177,3 +182,8 @@ install(
     DESTINATION
         "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
 )
+
+if(BUILD_REGISTER_PKG)
+    set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+    export(PACKAGE Libnova)
+endif(BUILD_REGISTER_PKG)
