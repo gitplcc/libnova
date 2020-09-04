@@ -10,13 +10,44 @@ include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
-include(CMakeDependentOption)
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
-include(CTest)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CMakeDependentOption)
+    include(CTest)
 
-find_package(Doxygen)
-find_program(CCACHE_PROGRAM ccache)
+    find_package(Doxygen)
+    find_program(CCACHE_PROGRAM ccache)
+
+    CMAKE_DEPENDENT_OPTION(BUILD_USING_CCACHE
+        "Enable using ccache for speed up compilation." OFF
+        "CCACHE_PROGRAM" OFF
+    )
+    if(BUILD_USING_CCACHE)
+        set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    endif(BUILD_USING_CCACHE)
+
+    CMAKE_DEPENDENT_OPTION(BUILD_DOCS
+        "Enable building documents." OFF
+        "DOXYGEN_FOUND" OFF
+    )
+    option(BUILD_EXAMPLES "Enable building examples." OFF)
+    option(BUILD_SHARED_LIBS "Build libnova as a shared library." ON)
+    option(BUILD_TOOLS "Enable building tools." OFF)
+    option(BUILD_REGISTER_PKG "Enable registering package in CMake registry." OFF)
+
+else(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+
+    set(BUILD_DOCS OFF)
+    set(BUILD_EXAMPLES OFF)
+    if(NOT DEFINED BUILD_SHARED_LIBS)
+        set(BUILD_SHARED_LIBS ON)
+    endif(NOT DEFINED BUILD_SHARED_LIBS)
+    set(BUILD_TOOLS OFF)
+    set(BUILD_REGISTER_PKG OFF)
+
+endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
 CHECK_INCLUDE_FILE(alloca.h HAVE_ALLOCA_H)
@@ -62,21 +93,6 @@ CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 
 configure_file(config.h.in.cmake config.h)
 
-CMAKE_DEPENDENT_OPTION(BUILD_USING_CCACHE
-    "Enable using ccache for speed up compilation." OFF
-    "CCACHE_PROGRAM" OFF
-)
-if(CCACHE_PROGRAM)
-    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-endif()
-CMAKE_DEPENDENT_OPTION(BUILD_DOCS
-    "Enable building documents." OFF
-    "DOXYGEN_FOUND" OFF
-)
-option(BUILD_EXAMPLES "Enable building examples." OFF)
-option(BUILD_SHARED_LIBS "Set to ON to build libnova as a shared library." ON)
-option(BUILD_TOOLS "Enable building tools." OFF)
-
 # add more global optimization flags to the visual studio release compilation
 if(MSVC)
     add_compile_options(
@@ -92,15 +108,16 @@ endif(MSVC)
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 
 # Allow in-tree target execution for PE/COFF systems
-file(MAKE_DIRECTORY bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+if (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+    file(MAKE_DIRECTORY bin)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+endif (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 
 # define a macro to setup executable program which are linked with libnova
 macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_NAME}.c)
     target_compile_definitions(${EXECUTABLE_NAME}
         PRIVATE
-            $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,LIBNOVA_SHARED,LIBNOVA_STATIC>
             $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>
             $<$<BOOL:${WIN32}>:_SCL_SECURE_NO_WARNINGS>
             $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
@@ -111,11 +128,8 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endmacro(SETUP_EXECUTABLE EXECUTABLE_NAME)
 
-# add include directory to all projects
-include_directories(
-    ${libnova_SOURCE_DIR}/src
-    ${libnova_BINARY_DIR}
-)
+# add include directory for all projects
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # traverse the sub directories
 add_subdirectory(src)
@@ -135,3 +149,43 @@ endif(BUILD_TOOLS)
 if(BUILD_DOCS)
     add_subdirectory(doc)
 endif(BUILD_DOCS)
+
+# Export stuff
+
+write_basic_package_version_file(
+    LibnovaConfigVersion.cmake
+    VERSION ${libnova_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+export(
+    EXPORT LibnovaTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/LibnovaTargets.cmake"
+    NAMESPACE Libnova::
+)
+configure_file(
+    cmake/LibnovaConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
+    COPYONLY
+)
+
+install(EXPORT LibnovaTargets
+    FILE
+        LibnovaTargets.cmake
+    NAMESPACE
+        Libnova::
+    DESTINATION
+        "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+)
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfigVersion.cmake"
+    DESTINATION
+        "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+)
+
+if(BUILD_REGISTER_PKG)
+    set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+    export(PACKAGE Libnova)
+endif(BUILD_REGISTER_PKG)
