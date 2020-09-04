@@ -6,7 +6,11 @@ target_compile_definitions(lntest
         $<$<BOOL:WIN32>:_CRT_SECURE_NO_DEPRECATE>
         $<$<BOOL:WIN32>:__WIN32__>
 )
-target_link_libraries(lntest nova $<$<BOOL:${UNIX}>:m>)
+target_link_libraries(
+    lntest
+    nova
+    $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
+)
 
 add_test(
     NAME fulltest

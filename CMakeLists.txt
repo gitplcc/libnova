@@ -49,6 +49,8 @@ else(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
+find_library(MATH_LIBRARY m)
+
 CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
 CHECK_INCLUDE_FILE(alloca.h HAVE_ALLOCA_H)
 check_symbol_exists(alloca alloca.h HAVE_ALLOCA)
@@ -73,9 +75,9 @@ check_symbol_exists(strtol stdlib.h HAVE_STRTOL)
 check_symbol_exists(strtok_r string.h HAVE_STRTOK_R)
 check_symbol_exists(isblank ctype.h HAVE_ISBLANK)
 
-if(UNIX)
-    set(CMAKE_REQUIRED_LIBRARIES m)
-endif(UNIX)
+if(MATH_LIBRARY)
+    set(CMAKE_REQUIRED_LIBRARIES ${MATH_LIBRARY})
+endif(MATH_LIBRARY)
 check_symbol_exists(modf math.h HAVE_MODF)
 check_symbol_exists(pow math.h HAVE_POW)
 check_symbol_exists(sqrt math.h HAVE_SQRT)
@@ -123,7 +125,11 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
             $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
             $<$<BOOL:${WIN32}>:__WIN32__>
     )
-    target_link_libraries(${EXECUTABLE_NAME} nova $<$<BOOL:${UNIX}>:m>)
+    target_link_libraries(
+        ${EXECUTABLE_NAME}
+        nova
+        $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
+    )
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
     install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endmacro(SETUP_EXECUTABLE EXECUTABLE_NAME)
