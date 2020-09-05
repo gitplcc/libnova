@@ -10,6 +10,7 @@ include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
+include(CheckCCompilerFlag)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
@@ -95,16 +96,28 @@ CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 
 configure_file(config.h.in.cmake config.h)
 
-# add more global optimization flags to the visual studio release compilation
-if(MSVC)
-    add_compile_options(
-        /arch:AVX
-        /GS-
-        $<$<CONFIG:Release>:/MD>
-        $<$<CONFIG:Release>:/Ox>
-        $<$<CONFIG:Release>:/Ob2>
-    )
-endif(MSVC)
+# Compiler scpecific flags
+check_c_compiler_flag(-fvisibility=hidden HAVE_VISIBILITY_FLAG)
+if(HAVE_VISIBILITY_FLAG)
+    add_compile_options(-fvisibility=hidden)
+endif(HAVE_VISIBILITY_FLAG)
+check_c_compiler_flag(/GS- HAVE_BUFSECCHK_FLAG)
+if(HAVE_BUFSECCHK_FLAG)
+    add_compile_options(/GS-)
+endif(HAVE_BUFSECCHK_FLAG)
+
+# Compiler specific optimization flags
+check_c_compiler_flag(-march=native HAVE_ARCH_FLAG)
+if(HAVE_ARCH_FLAG)
+    add_compile_options(-march=native)
+endif(HAVE_ARCH_FLAG)
+check_c_compiler_flag(/arch:AVX HAVE_AVX_FLAG)
+check_c_compiler_flag(/arch:AVX2 HAVE_AVX2_FLAG)
+if(HAVE_AVX2_FLAG)
+    add_compile_options(/arch:AVX2)
+elseif(HAVE_AVX2_FLAG)
+    add_compile_options(/arch:AVX)
+endif()
 
 # set the debug postfix
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
