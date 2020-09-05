@@ -140,21 +140,25 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 # traverse the sub directories
 add_subdirectory(src)
 
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif(BUILD_EXAMPLES)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
-if(BUILD_TESTING)
-    add_subdirectory(lntest)
-endif(BUILD_TESTING)
+    if(BUILD_EXAMPLES)
+        add_subdirectory(examples)
+    endif(BUILD_EXAMPLES)
 
-if(BUILD_TOOLS)
-    add_subdirectory(tools)
-endif(BUILD_TOOLS)
+    if(BUILD_TESTING)
+        add_subdirectory(lntest)
+    endif(BUILD_TESTING)
 
-if(BUILD_DOCS)
-    add_subdirectory(doc)
-endif(BUILD_DOCS)
+    if(BUILD_TOOLS)
+        add_subdirectory(tools)
+    endif(BUILD_TOOLS)
+
+    if(BUILD_DOCS)
+        add_subdirectory(doc)
+    endif(BUILD_DOCS)
+
+endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 # Export stuff
 
