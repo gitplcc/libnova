@@ -97,10 +97,6 @@ CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 configure_file(config.h.in.cmake config.h)
 
 # Compiler scpecific flags
-check_c_compiler_flag(-fvisibility=hidden HAVE_VISIBILITY_FLAG)
-if(HAVE_VISIBILITY_FLAG)
-    add_compile_options(-fvisibility=hidden)
-endif(HAVE_VISIBILITY_FLAG)
 check_c_compiler_flag(/GS- HAVE_BUFSECCHK_FLAG)
 if(HAVE_BUFSECCHK_FLAG)
     add_compile_options(/GS-)

@@ -32,16 +32,32 @@
 extern "C" {
 #endif
 
-#if defined(_MSC_VER) || defined(__CYGWIN__) || defined(__MINGW32__) || defined( __BCPLUSPLUS__)  || defined( __MWERKS__)
-#  if defined( LIBNOVA_STATIC )
-#    define LIBNOVA_EXPORT
-#  elif defined( LIBNOVA_SHARED )
-#    define LIBNOVA_EXPORT   __declspec(dllexport)
-#  else
-#    define LIBNOVA_EXPORT
-#  endif
-#else
+#if defined(LIBNOVA_STATIC) && defined(LIBNOVA_SHARED)
+#  error Only one of LIBNOVA_STATIC and LIBNOVA_SHARED must be defined
+#endif
+
+#if !defined(LIBNOVA_STATIC) && !defined(LIBNOVA_SHARED)
+#  error One of LIBNOVA_STATIC and LIBNOVA_SHARED must be defined
+#endif
+
+#if defined(LIBNOVA_STATIC)
 #  define LIBNOVA_EXPORT
+#elif defined(LIBNOVA_SHARED)
+#  if defined(nova_EXPORTS)
+     /* Building library */
+#    if defined(__WIN32__)
+#      define LIBNOVA_EXPORT __declspec(dllexport)
+#    else
+#      define LIBNOVA_EXPORT __attribute__ ((visibility ("default")))
+#    endif
+#  else
+     /* Using library */
+#    if defined(__WIN32__)
+#      define LIBNOVA_EXPORT __declspec(dllimport)
+#    else
+#      define LIBNOVA_EXPORT __attribute__ ((visibility ("default")))
+#    endif
+#  endif
 #endif
 
 /* sidereal day length in seconds and days (for JD)*/

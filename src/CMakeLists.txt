@@ -83,7 +83,7 @@ add_library(nova
 )
 target_compile_definitions(nova
     PUBLIC
-        $<IF:$<BOOL:BUILD_SHARED_LIBS>,LIBNOVA_SHARED,LIBNOVA_STATIC>
+        $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,LIBNOVA_SHARED,LIBNOVA_STATIC>
     PRIVATE
         $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>
         $<$<BOOL:${WIN32}>:_SCL_SECURE_NO_WARNINGS>
@@ -96,6 +96,13 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
+if (BUILD_SHARED_LIBS)
+    set_target_properties(nova elp
+        PROPERTIES
+            POSITION_INDEPENDENT_CODE ON
+            C_VISIBILITY_PRESET hidden
+    )
+endif (BUILD_SHARED_LIBS)
 
 add_library(Libnova::nova ALIAS nova)
 
