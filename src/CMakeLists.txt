@@ -101,6 +101,8 @@ if (BUILD_SHARED_LIBS)
         PROPERTIES
             POSITION_INDEPENDENT_CODE ON
             C_VISIBILITY_PRESET hidden
+            VERSION "${libnova_VERSION_MAJOR}.${libnova_VERSION_MINOR}.${libnova_VERSION_PATCH}"
+            SOVERSION ${libnova_VERSION_MAJOR}
     )
 endif (BUILD_SHARED_LIBS)
 
