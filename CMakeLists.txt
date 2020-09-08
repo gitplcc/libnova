@@ -39,6 +39,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
     find_package(Doxygen)
     find_program(CCACHE_PROGRAM ccache)
+    mark_as_advanced(CCACHE_PROGRAM)
 
     CMAKE_DEPENDENT_OPTION(BUILD_USING_CCACHE
         "Enable using ccache for speed up compilation." ON
@@ -70,6 +71,7 @@ else(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 find_library(MATH_LIBRARY m)
+mark_as_advanced(MATH_LIBRARY)
 
 CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
 CHECK_INCLUDE_FILE(alloca.h HAVE_ALLOCA_H)
