@@ -41,7 +41,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     find_program(CCACHE_PROGRAM ccache)
 
     CMAKE_DEPENDENT_OPTION(BUILD_USING_CCACHE
-        "Enable using ccache for speed up compilation." OFF
+        "Enable using ccache for speed up compilation." ON
         "CCACHE_PROGRAM" OFF
     )
     if(BUILD_USING_CCACHE)
