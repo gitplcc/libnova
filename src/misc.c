@@ -229,7 +229,7 @@ char *get_humanr_location(double location)
         sec *= -1;
 
     sec = 60.0 * (modf(sec, &min));
-    sprintf(buf,"%+d�%d'%.2f\"",(int)deg, (int) min, sec);
+    sprintf(buf,"%+dº%d'%.2f\"",(int)deg, (int) min, sec);
 
     return buf;
 }
