@@ -247,7 +247,7 @@ static int julian_test(void)
         ln_get_timet_from_julian(ln_get_julian_from_timet(&now), &now_jd);
 
         failed += test_result("(Julian Day) Difference between time_t from system"
-                "and from JD", difftime(now, now_jd), 0, 0);
+                " and from JD", difftime(now, now_jd), 0, 0);
 
         return failed;
 }
