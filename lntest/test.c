@@ -523,9 +523,9 @@ static int transform_test(void)
 
         ln_lnlat_to_hlnlat(&ecl, &hecl);
         failed += test_result("(Transforms) Equ to Ecl longitude ",
-                ecl.lng, 113.21542105, 0.00000001);
+                ecl.lng, 113.21555278, 0.00000001);
         failed += test_result("(Transforms) Equ to Ecl latitude",
-                ecl.lat, 6.68002727, 0.00000001);
+                ecl.lat, 6.68265, 0.00000001);
 
         ln_get_equ_from_ecl(&ecl, JD, &equ);
         failed += test_result ("(Transforms) Ecl to Equ RA ",
