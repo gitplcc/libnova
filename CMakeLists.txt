@@ -198,6 +198,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif(BUILD_EXAMPLES)
 
     if(BUILD_TESTING)
+        add_subdirectory(extern/Unity)
         add_subdirectory(lntest)
     endif(BUILD_TESTING)
 
