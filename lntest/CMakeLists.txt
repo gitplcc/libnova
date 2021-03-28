@@ -1,40 +1,37 @@
-add_executable(lntest test)
-target_compile_definitions(lntest
-    PRIVATE
-        $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>
-        $<$<BOOL:${WIN32}>:_SCL_SECURE_NO_WARNINGS>
-        $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
-        $<$<BOOL:${WIN32}>:__WIN32__>
-)
-target_link_libraries(
-    lntest
-    nova
-    $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
+macro(add_unit_test)
+    set(options "")
+    set(oneValueArgs NAME)
+    set(multiValueArgs SOURCES LIBS)
+    cmake_parse_arguments(TEST "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    add_executable(${TEST_NAME} ${TEST_SOURCES})
+    set_target_properties(
+        ${TEST_NAME}
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
+        )
+    target_link_libraries(${TEST_NAME} ${TEST_LIBS})
+    add_test(
+        NAME ${TEST_NAME}
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
+        COMMAND ${TEST_NAME}
+    )
+    list(APPEND TESTNAMES ${TEST_NAME})
+endmacro()
+
+add_unit_test(
+    NAME test_lntest
+    SOURCES test.c
+    LIBS nova unity ${MATH_LIBRARY}
 )
 
-add_test(
-    NAME fulltest
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
-    COMMAND lntest
+add_unit_test(
+    NAME test_ticket9
+    SOURCES test_ticket9.c
+    LIBS nova unity ${MATH_LIBRARY}
 )
 
-add_executable(test_ticket9 test_ticket9)
-target_compile_definitions(test_ticket9
-    PRIVATE
-        $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>
-        $<$<BOOL:${WIN32}>:_SCL_SECURE_NO_WARNINGS>
-        $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
-        $<$<BOOL:${WIN32}>:__WIN32__>
-)
-target_link_libraries(
-    test_ticket9
-    nova
-    unity
-    $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
+add_custom_target(check
+    COMMAND ${CMAKE_CTEST_COMMAND}
+    DEPENDS ${TESTNAMES}
 )
 
-add_test(
-    NAME ticket9
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
-    COMMAND test_ticket9
-)
