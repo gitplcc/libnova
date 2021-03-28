@@ -199,6 +199,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
     if(BUILD_TESTING)
         add_subdirectory(extern/Unity)
+        target_compile_definitions(unity
+            PUBLIC
+                UNITY_INCLUDE_DOUBLE UNITY_INCLUDE_PRINT_FORMATTED
+        )
         add_subdirectory(lntest)
     endif(BUILD_TESTING)
 
