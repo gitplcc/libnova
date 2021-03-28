@@ -55,6 +55,8 @@ typedef int bool;
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include <assert.h>
+#include <limits.h>
 
 #if HAVE_ALLOCA_H
 #include <alloca.h>
@@ -211,6 +213,7 @@ void ln_deg_to_dms (double degrees, struct ln_dms *dms)
         dms->neg = 1;
 
     degrees = fabs(degrees);
+    assert((int)degrees <= SHRT_MAX);
     dms->degrees = (int)degrees;
 
     /* multiply remainder by 60 to get minutes */
@@ -248,11 +251,18 @@ double ln_range_degrees(double angle)
     if (angle >= 0.0 && angle < 360.0)
         return angle;
 
+#if defined HAVE_FMODL
+    temp = fmodl(angle, 360.0L);
+    if (temp < 0.0)
+        temp += 360.0;
+    return temp;
+#else
     temp = (int)(angle / 360);
     if (angle < 0.0)
         temp --;
     temp *= 360.0;
     return angle - temp;
+#endif
 }
 
 /* puts a large angle in the correct range 0 - 2PI radians */
@@ -263,12 +273,19 @@ double ln_range_radians(double angle)
     if (angle >= 0.0 && angle < (2.0 * M_PI))
         return angle;
 
+#if defined HAVE_FMODL
+    temp = fmodl(angle, M_PI * 2.0L);
+    if (temp < 0.0)
+        temp += M_PI * 2.0L;
+    return temp;
+#else
     temp = (int)(angle / (M_PI * 2.0));
 
     if (angle < 0.0)
         temp --;
     temp *= (M_PI * 2.0);
     return angle - temp;
+#endif
 }
 
 /* puts a large angle in the correct range -2PI - 2PI radians */
@@ -280,11 +297,14 @@ double ln_range_radians2(double angle)
     if (angle > (-2.0 * M_PI) && angle < (2.0 * M_PI))
         return angle;
 
+#if defined HAVE_FMODL
+    return fmodl(angle, M_PI * 2.0);
+#else
     temp = (int)(angle / (M_PI * 2.0));
     temp *= (M_PI * 2.0);
     return angle - temp;
+#endif
 }
-
 
 /* add seconds to hms */
 void ln_add_secs_hms(struct ln_hms *hms, double seconds)

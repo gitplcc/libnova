@@ -132,6 +132,7 @@ check_symbol_exists(acosl math.h HAVE_ACOSL)
 check_symbol_exists(asinl math.h HAVE_ASINL)
 check_symbol_exists(atan2l math.h HAVE_ATAN2L)
 check_symbol_exists(nan math.h HAVE_NAN)
+check_symbol_exists(fmodl math.h HAVE_FMODL)
 
 CHECK_INCLUDE_FILE(sys/stat.h HAVE_SYS_STAT_H)
 CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)

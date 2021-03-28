@@ -33,6 +33,7 @@
 #cmakedefine01 HAVE_ASINL
 #cmakedefine01 HAVE_ATAN2L
 #cmakedefine01 HAVE_NAN
+#cmakedefine01 HAVE_FMODL
 
 #cmakedefine01 HAVE_SYS_STAT_H
 #cmakedefine01 HAVE_DLFCN_H
