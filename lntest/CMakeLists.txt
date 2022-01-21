@@ -37,6 +37,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_nutation
+    SOURCES test_nutation.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_transform
     SOURCES test_transform.c
     LIBS nova unity ${MATH_LIBRARY}
