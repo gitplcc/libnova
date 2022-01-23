@@ -81,6 +81,8 @@ add_library(nova
     implementation.c
     $<TARGET_OBJECTS:elp>
 )
+target_compile_features(nova PUBLIC c_std_11)
+set_target_properties(nova PROPERTIES C_EXTENSIONS OFF)
 target_compile_definitions(nova
     PUBLIC
         $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,LIBNOVA_SHARED,LIBNOVA_STATIC>

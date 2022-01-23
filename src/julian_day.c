@@ -113,15 +113,13 @@ void ln_get_date(double JD, struct ln_date *date)
    int A, a, B, C, D, E;
    double F, Z;
 
-   JD += 0.5;
-   Z = (int) JD;
-   F = JD - Z;
+   F = modf(JD + 0.5, &Z);
 
-   if (Z < 2299161)
+   if (Z < 2299161.0)
        A = (int) Z;
    else {
        a = (int)((Z - 1867216.25) / 36524.25);
-       A = (int)(Z + 1 + a - (int)(a / 4));
+       A = (int)(Z + (1 + a - (a / 4)));
    }
 
    B = A + 1524;
@@ -130,26 +128,20 @@ void ln_get_date(double JD, struct ln_date *date)
    E = (int) ((B - D) / 30.6001);
 
    /* get the hms */
-   date->hours = (int)(F * 24);
-   F -= (double)date->hours / 24;
-   date->minutes = (int)(F * 1440);
-   F -= (double)date->minutes / 1440;
-   date->seconds = F * 86400;
+   F = modf(F * 24.0, &Z);
+   date->hours = (int)Z;
+   F = modf(F * 60.0, &Z);
+   date->minutes = (int)Z;
+   date->seconds = F * 60.0;
 
    /* get the day */
    date->days = B - D - (int)(30.6001 * E);
 
    /* get the month */
-   if (E < 14)
-       date->months = E - 1;
-   else
-       date->months = E - 13;
+   date->months = E < 14 ? E - 1 : E - 13;
 
    /* get the year */
-   if (date->months > 2)
-       date->years = C - 4716;
-   else
-       date->years = C - 4715;
+   date->years = date->months > 2 ? C - 4716 : C - 4715;
 }
 
 /*! \fn void ln_get_date_from_timet (time_t *t, struct ln_date *date)
@@ -292,21 +284,23 @@ double ln_get_julian_local_date(struct ln_zonedate* zonedate)
 void ln_get_local_date(double JD, struct ln_zonedate *zonedate)
 {
     struct ln_date date;
-    time_t curtime;
-    time_t utctime;
-    time_t loctime;
-
-    //struct tm *loctime;
-    long gmtoff;
-
     ln_get_date(JD, &date);
 
     /* add day light savings time and hour angle */
-    curtime = time(NULL);
-    utctime = mktime(gmtime(&curtime));
-    loctime = mktime(localtime(&curtime));
-    gmtoff = difftime(loctime, utctime);
-    ln_date_to_zonedate(&date, zonedate, gmtoff);
+    time_t date_t;
+    ln_get_timet_from_julian(JD, &date_t);
+
+    struct tm *date_tm = gmtime(&date_t);
+    date_tm->tm_isdst = -1;
+    time_t utctime = mktime(date_tm);
+
+    date_tm = localtime(&date_t);
+    date_tm->tm_isdst = -1;
+    time_t loctime = mktime(date_tm);
+
+    double gmtoff = difftime(loctime, utctime);
+
+    ln_date_to_zonedate(&date, zonedate, (long)gmtoff);
 }
 
 /*! \fn int ln_get_date_from_mpc(struct ln_date *date, char *mpc_date)
