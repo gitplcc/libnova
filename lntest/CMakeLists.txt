@@ -27,6 +27,24 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_julian_day
+    SOURCES test_julian_day.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
+    NAME test_dynamical_time
+    SOURCES test_dynamical_time.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
+    NAME test_sidereal_time
+    SOURCES test_sidereal_time.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_ticket9
     SOURCES test_ticket9.c
     LIBS nova unity ${MATH_LIBRARY}
@@ -39,18 +57,6 @@ add_unit_test(
 )
 
 add_unit_test(
-    NAME test_dynamical_time
-    SOURCES test_dynamical_time.c
-    LIBS nova unity ${MATH_LIBRARY}
-)
-
-add_unit_test(
-    NAME test_julian_day
-    SOURCES test_julian_day.c
-    LIBS nova unity ${MATH_LIBRARY}
-)
-
-add_unit_test(
     NAME test_nutation
     SOURCES test_nutation.c
     LIBS nova unity ${MATH_LIBRARY}
@@ -59,12 +65,6 @@ add_unit_test(
 add_unit_test(
     NAME test_transform
     SOURCES test_transform.c
-    LIBS nova unity ${MATH_LIBRARY}
-)
-
-add_unit_test(
-    NAME test_sidereal_time
-    SOURCES test_sidereal_time.c
     LIBS nova unity ${MATH_LIBRARY}
 )
 
