@@ -1638,31 +1638,6 @@ static int parallax_test(void)
         return failed;
 }
 
-static int angular_test(void)
-{
-        int failed = 0;
-        double d;
-        struct ln_equ_posn posn1, posn2;
-
-        /* alpha Bootes (Arcturus) */
-        posn1.ra = 213.9154;
-        posn1.dec = 19.1825;
-
-        /* alpha Virgo (Spica) */
-        posn2.ra = 201.2983;
-        posn2.dec = -11.1614;
-
-        d = ln_get_angular_separation(&posn1, &posn2);
-        failed += test_result("(Angular) Separation of Arcturus and Spica   ",
-                d, 32.79302684, 0.00001);
-
-        d = ln_get_rel_posn_angle(&posn1, &posn2);
-        failed += test_result("(Angular) Position Angle of Arcturus and Spica   ",
-                d, 22.39042787, 0.00001);
-
-        return failed;
-}
-
 static int utility_test(void)
 {
         struct ln_dms dms;
@@ -1787,7 +1762,6 @@ int main(int argc, const char *argv[])
         failed += hyp_future_rst_test ();
         failed += body_future_rst_test ();
         failed += parallax_test ();
-        failed += angular_test();
         failed += utility_test();
         failed += airmass_test ();
         failed += constellation_test ();
