@@ -4,7 +4,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-project(libnova VERSION 0.16.0 LANGUAGES C)
+project(libnova VERSION 0.16.1 LANGUAGES C)
 
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
