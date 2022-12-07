@@ -28,7 +28,7 @@
 #include <unity.h>
 
 #define MAS_IN_DEG  (2.7777777777777777777777777777778e-7L)
-#define MAS_IN_RAD  (4,8481368110953599358991410235795e-9L)
+#define MAS_IN_RAD  (4.8481368110953599358991410235795e-9L)
 
 double JD;
 struct ln_equ_posn object;
@@ -141,6 +141,29 @@ static void test_range_radians2()
   );
 }
 
+void test_deg_to_dms_several(void)
+{
+  struct ln_dms dms;
+
+  ln_deg_to_dms(-1.23, &dms);
+  TEST_ASSERT(dms.neg);
+  TEST_ASSERT_EQUAL_INT( 1, dms.degrees);
+  TEST_ASSERT_EQUAL_INT(13, dms.minutes);
+  TEST_ASSERT_EQUAL_DOUBLE(48.0, dms.seconds);
+
+  ln_deg_to_dms(1.23, &dms);
+  TEST_ASSERT(!dms.neg);
+  TEST_ASSERT_EQUAL_INT( 1, dms.degrees);
+  TEST_ASSERT_EQUAL_INT(13, dms.minutes);
+  TEST_ASSERT_EQUAL_DOUBLE(48.0, dms.seconds);
+
+  ln_deg_to_dms(-0.5, &dms);
+  TEST_ASSERT(dms.neg);
+  TEST_ASSERT_EQUAL_INT( 0, dms.degrees);
+  TEST_ASSERT_EQUAL_INT(30, dms.minutes);
+  TEST_ASSERT_EQUAL_DOUBLE(0.0, dms.seconds);
+}
+
 int main(int argc, char **argv)
 {
   UNITY_BEGIN();
@@ -157,5 +180,6 @@ int main(int argc, char **argv)
   RUN_TEST(test_range_degrees);
   RUN_TEST(test_range_radians);
   RUN_TEST(test_range_radians2);
+  RUN_TEST(test_deg_to_dms_several);
   return UNITY_END();
 }

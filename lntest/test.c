@@ -1260,23 +1260,6 @@ static int parallax_test(void)
         return failed;
 }
 
-static int utility_test(void)
-{
-        struct ln_dms dms;
-        double deg = -1.23, deg2 = 1.23, deg3 = -0.5;
-
-        ln_deg_to_dms(deg, &dms);
-        printf("TEST deg %f ==> deg %c%d min %d sec %f\n",
-                deg, dms.neg ? '-' : '+', dms.degrees, dms.minutes, dms.seconds);
-        ln_deg_to_dms(deg2, &dms);
-        printf("TEST deg %f ==> deg %c%d min %d sec %f\n",
-                deg2, dms.neg ? '-' : '+', dms.degrees, dms.minutes, dms.seconds);
-        ln_deg_to_dms(deg3, &dms);
-        printf("TEST deg %f ==> deg %c%d min %d sec %f\n",
-                deg3, dms.neg ? '-' : '+', dms.degrees, dms.minutes, dms.seconds);
-        return 0;
-}
-
 static int airmass_test(void)
 {
         int failed = 0;
@@ -1383,7 +1366,6 @@ int main(int argc, const char *argv[])
         failed += hyp_future_rst_test ();
         failed += body_future_rst_test ();
         failed += parallax_test ();
-        failed += utility_test();
         failed += airmass_test ();
         failed += constellation_test ();
 
