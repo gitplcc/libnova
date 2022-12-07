@@ -45,6 +45,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_rise_set
+    SOURCES test_rise_set.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_angular_separation
     SOURCES test_angular_separation.c
     LIBS nova unity ${MATH_LIBRARY}
