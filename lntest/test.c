@@ -606,30 +606,6 @@ static int vsop87_test(void)
         return failed;
 }
 
-int lunar_test ()
-{
-        double JD = 2448724.5;
-
-        struct ln_rect_posn moon;
-        struct ln_equ_posn equ;
-        struct ln_lnlat_posn ecl;
-        int failed = 0;
-
-        /*      JD = get_julian_from_sys();*/
-        /*JD=2448724.5;*/
-        ln_get_lunar_geo_posn(JD, &moon, 0);
-        fprintf(stdout, "lunar x %f  y %f  z %f\n",moon.X, moon.Y, moon.Z);
-        ln_get_lunar_ecl_coords(JD, &ecl, 0);
-        fprintf(stdout, "lunar long %f  lat %f\n",ecl.lng, ecl.lat);
-        ln_get_lunar_equ_coords_prec(JD, &equ, 0);
-        fprintf(stdout, "lunar RA %f  Dec %f\n",equ.ra, equ.dec);
-        fprintf(stdout, "lunar distance km %f\n", ln_get_lunar_earth_dist(JD));
-        fprintf(stdout, "lunar disk %f\n", ln_get_lunar_disk(JD));
-        fprintf(stdout, "lunar phase %f\n", ln_get_lunar_phase(JD));
-        fprintf(stdout, "lunar bright limb %f\n", ln_get_lunar_bright_limb(JD));
-        return failed;
-}
-
 int elliptic_motion_test ()
 {
         double r,v,l,V,dist;
@@ -1188,7 +1164,6 @@ int main(int argc, const char *argv[])
         failed += aberration_test();
         failed += precession_test();
         failed += vsop87_test();
-        failed += lunar_test ();
         failed += elliptic_motion_test();
         failed += parabolic_motion_test ();
         failed += hyperbolic_motion_test ();

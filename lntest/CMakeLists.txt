@@ -99,6 +99,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_lunar
+    SOURCES test_lunar.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_constellation
     SOURCES test_constellation.c
     LIBS nova unity ${MATH_LIBRARY}
