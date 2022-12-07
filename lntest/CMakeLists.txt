@@ -51,6 +51,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_airmass
+    SOURCES test_airmass.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_angular_separation
     SOURCES test_angular_separation.c
     LIBS nova unity ${MATH_LIBRARY}

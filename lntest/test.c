@@ -1260,30 +1260,6 @@ static int parallax_test(void)
         return failed;
 }
 
-static int airmass_test(void)
-{
-        int failed = 0;
-        double x;
-
-        double X = ln_get_airmass(90, 750.0);
-        failed += test_result("(Airmass) Airmass at Zenith", X, 1, 0);
-
-        X = ln_get_airmass(10, 750.0);
-        failed += test_result("(Airmass) Airmass at 10 degrees altitude",
-                X, 5.64, 0.1);
-
-        X = ln_get_alt_from_airmass(1, 750.0);
-        failed += test_result("(Airmass) Altitude at airmass 1", X, 90, 0);
-
-        for (x = -10; x < 90; x += 10.54546456) {
-                X = ln_get_alt_from_airmass(ln_get_airmass(x, 750.0), 750.0);
-                failed += test_result("(Airmass) Altitude->Airmass->Altitude at"
-                        "10 degrees", X, x, 0.000000001);
-        }
-
-        return failed;
-}
-
 static int constellation_test(void)
 {
         int i;
@@ -1366,7 +1342,6 @@ int main(int argc, const char *argv[])
         failed += hyp_future_rst_test ();
         failed += body_future_rst_test ();
         failed += parallax_test ();
-        failed += airmass_test ();
         failed += constellation_test ();
 
         end_timer();
