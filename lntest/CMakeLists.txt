@@ -27,6 +27,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_heliocentric_time
+    SOURCES test_heliocentric_time.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_julian_day
     SOURCES test_julian_day.c
     LIBS nova unity ${MATH_LIBRARY}
