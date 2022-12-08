@@ -93,6 +93,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_aber_prec_nut
+    SOURCES test_aber_prec_nut.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_apparent_position
     SOURCES test_apparent_position.c
     LIBS nova unity ${MATH_LIBRARY}
