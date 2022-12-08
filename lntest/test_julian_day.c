@@ -32,8 +32,6 @@
 #include <threads.h>
 #include <time.h>
 
-#define ARCSEC_TENTH  (0.1 / 3600.0)
-
 static char *tz_old;
 
 void setUp()
@@ -93,7 +91,7 @@ void test_ln_get_date()
   TEST_ASSERT_EQUAL(  30, date.days);
   TEST_ASSERT_EQUAL(   0, date.hours);
   TEST_ASSERT_EQUAL(   0, date.minutes);
-  TEST_ASSERT_DOUBLE_WITHIN(1e-6, 0.0, date.seconds);
+  TEST_ASSERT_EQUAL_DOUBLE(0.0, date.seconds);
 }
 
 void test_ln_get_date_from_mpc()
@@ -107,7 +105,7 @@ void test_ln_get_date_from_mpc()
   TEST_ASSERT_EQUAL(  22, date.days);
   TEST_ASSERT_EQUAL(   0, date.hours);
   TEST_ASSERT_EQUAL(   0, date.minutes);
-  TEST_ASSERT_DOUBLE_WITHIN(1e-4, 0.0, date.seconds);
+  TEST_ASSERT_EQUAL_DOUBLE(0.0, date.seconds);
 }
 
 void test_ln_get_date_from_sys()
@@ -141,7 +139,7 @@ void test_ln_get_date_from_timet()
   TEST_ASSERT_EQUAL(utcdate->tm_mday, now_date.days);
   TEST_ASSERT_EQUAL(utcdate->tm_hour, now_date.hours);
   TEST_ASSERT_EQUAL(utcdate->tm_min, now_date.minutes);
-  TEST_ASSERT_DOUBLE_WITHIN(1.0, utcdate->tm_sec, now_date.seconds);
+  TEST_ASSERT_EQUAL_DOUBLE(utcdate->tm_sec, now_date.seconds);
 }
 
 void test_ln_get_date_from_tm()
@@ -158,7 +156,7 @@ void test_ln_get_date_from_tm()
   TEST_ASSERT_EQUAL(utcdate->tm_mday, now_date.days);
   TEST_ASSERT_EQUAL(utcdate->tm_hour, now_date.hours);
   TEST_ASSERT_EQUAL(utcdate->tm_min, now_date.minutes);
-  TEST_ASSERT_DOUBLE_WITHIN(1.0, utcdate->tm_sec, now_date.seconds);
+  TEST_ASSERT_EQUAL_DOUBLE(utcdate->tm_sec, now_date.seconds);
 }
 
 void test_ln_get_day_of_week()
@@ -190,7 +188,7 @@ void test_ln_get_julian_day()
   };
   double JD = ln_get_julian_day(&date);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-8, 2436116.29166667, JD);
+  TEST_ASSERT_EQUAL_DOUBLE(2436116.291667, JD);
 
   /* Get julian day for 30/06/1954 00:00:00 */
   date.years   = 1954;
@@ -201,7 +199,7 @@ void test_ln_get_julian_day()
   date.seconds =    0;
   JD = ln_get_julian_day(&date);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-8, 2434923.5, JD);
+  TEST_ASSERT_EQUAL_DOUBLE(2434923.5, JD);
 
   /* Get julian day for 27/01/333 12:00:00 */
   date.years = 333;
@@ -212,7 +210,7 @@ void test_ln_get_julian_day()
   date.seconds =    0;
   JD = ln_get_julian_day(&date);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-8, 1842713.0, JD);
+  TEST_ASSERT_EQUAL_DOUBLE(1842713.0, JD);
 
   /* Get julian day for 30/06/1954 00:00:00 */
   date.years = 1954;
@@ -223,14 +221,14 @@ void test_ln_get_julian_day()
   date.seconds =    0;
   JD = ln_get_julian_day(&date);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-8, 2434923.5, JD);
+  TEST_ASSERT_EQUAL_DOUBLE(2434923.5, JD);
 }
 
 void test_ln_get_julian_from_mpc()
 {
   double JD = ln_get_julian_from_mpc("J969U");
 
-  TEST_ASSERT_DOUBLE_WITHIN(1e-4, 2450356.5, JD);
+  TEST_ASSERT_EQUAL_DOUBLE(2450356.5, JD);
 }
 
 void test_ln_get_julian_from_sys()
@@ -282,7 +280,7 @@ void test_ln_get_local_date()
   TEST_ASSERT_EQUAL(  15, localdate.days);
   TEST_ASSERT_EQUAL(   2, localdate.hours);
   TEST_ASSERT_EQUAL(   0, localdate.minutes);
-  TEST_ASSERT_DOUBLE_WITHIN(0.001, 0.0, localdate.seconds);
+  TEST_ASSERT_DOUBLE_WITHIN(1e-4, 0.0, localdate.seconds);
   TEST_ASSERT_EQUAL(7200, localdate.gmtoff);
 }
 
@@ -322,7 +320,7 @@ void test_ln_zonedate_to_date()
   TEST_ASSERT_EQUAL(  30, date.days);
   TEST_ASSERT_EQUAL(   0, date.hours);
   TEST_ASSERT_EQUAL(   0, date.minutes);
-  TEST_ASSERT_DOUBLE_WITHIN(1e-6, 0.0, date.seconds);
+  TEST_ASSERT_EQUAL_DOUBLE(0.0, date.seconds);
 }
 
 int main(int argc, char **argv)
