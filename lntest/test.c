@@ -212,21 +212,6 @@ static int aber_prec_nut_test()
         return failed;
 }
 
-static int solar_coord_test(void)
-{
-        struct ln_helio_posn pos;
-        int failed = 0;
-
-        ln_get_solar_geom_coords(2448908.5, &pos);
-        failed += test_result("(Solar Coords) longitude (deg) on JD 2448908.5  ",
-                pos.L, 200.00810889, 0.00000001);
-        failed += test_result("(Solar Coords) latitude (deg) on JD 2448908.5  ",
-                pos.B, 0.00018690, 0.00000001);
-        failed += test_result("(Solar Coords) radius vector (AU) on JD 2448908.5  ",
-                pos.R, 0.99760852, 0.00000001);
-        return failed;
-}
-
 static int aberration_test(void)
 {
         struct lnh_equ_posn hobject;
@@ -1113,7 +1098,6 @@ int main(int argc, const char *argv[])
         start_timer();
 
         failed += aber_prec_nut_test();
-        failed += solar_coord_test ();
         failed += aberration_test();
         failed += precession_test();
         failed += vsop87_test();

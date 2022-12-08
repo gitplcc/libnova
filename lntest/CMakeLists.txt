@@ -81,6 +81,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_solar
+    SOURCES test_solar.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_ticket9
     SOURCES test_ticket9.c
     LIBS nova unity ${MATH_LIBRARY}
