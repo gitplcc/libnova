@@ -129,6 +129,12 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_parabolic_motion
+    SOURCES test_parabolic_motion.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_hyperbolic_motion
     SOURCES test_hyperbolic_motion.c
     LIBS nova unity ${MATH_LIBRARY}
