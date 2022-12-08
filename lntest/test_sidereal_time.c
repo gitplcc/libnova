@@ -55,14 +55,14 @@ void test_ln_get_mean_sidereal_time(void)
 {
   double mst = ln_get_mean_sidereal_time(JD);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6, 8.58252488, mst);
+  TEST_ASSERT_DOUBLE_WITHIN(1.0e-8, 8.58252488, mst);
 }
 
 void test_ln_get_apparent_sidereal_time(void)
 {
   double ast = ln_get_apparent_sidereal_time(JD);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6, 8.58245327, ast);
+  TEST_ASSERT_DOUBLE_WITHIN(1.0e-8, 8.58245327, ast);
 }
 
 int main(int argc, char **argv)
