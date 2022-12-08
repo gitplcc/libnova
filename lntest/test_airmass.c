@@ -45,7 +45,7 @@ void test_ln_get_airmass_at_10degrees(void)
 {
   double X = ln_get_airmass(10.0, 750.0);
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    0.1, 5.64, X, "Airmass at 10 degrees altitude"
+    0.01, 5.64, X, "Airmass at 10 degrees altitude"
   );
 }
 
@@ -62,7 +62,7 @@ void test_ln_get_alt_from_airmass_roundloop(void)
     char msg[200];
     sprintf(msg, "Altitude->Airmass->Altitude at %.2f degrees", x);
     double X = ln_get_alt_from_airmass(ln_get_airmass(x, 750.0), 750.0);
-    TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(1.0e-9, x, X, msg);
+    TEST_ASSERT_EQUAL_DOUBLE_MESSAGE(x, X, msg);
   }
 }
 
