@@ -34,19 +34,28 @@
 
 #define ARCSEC_TENTH  (0.1 / 3600.0)
 
-static char *tz_old = NULL;
+static char *tz_old;
 
 void setUp()
 {
   const char *tz_current = getenv("TZ");
-  size_t buf_size = strlen(tz_current) + 1;
-  tz_old = malloc(buf_size);
-  strncpy(tz_old, tz_current, buf_size);
+  if (tz_current)
+  {
+    size_t buf_size = strlen(tz_current) + 1;
+    tz_old = malloc(buf_size);
+    strncpy(tz_old, tz_current, buf_size);
+  }
+  else
+    tz_old = NULL;
+
   setenv("TZ", "CET", 1);
 }
 
 void tearDown()
 {
+  if (!tz_old)
+    return;
+
   setenv("TZ", tz_old, 1);
   free(tz_old);
 }
