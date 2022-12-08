@@ -212,117 +212,6 @@ static int aber_prec_nut_test()
         return failed;
 }
 
-static int precession_test(void)
-{
-        double JD;
-        struct ln_equ_posn object, pos, pos2, pm;
-        struct lnh_equ_posn hobject;
-        struct ln_date grb_date;
-        int failed = 0;
-
-        /* object position */
-        hobject.ra.hours = 2;
-        hobject.ra.minutes = 44;
-        hobject.ra.seconds = 11.986;
-        hobject.dec.neg = 0;
-        hobject.dec.degrees = 49;
-        hobject.dec.minutes = 13;
-        hobject.dec.seconds = 42.48;
-
-        JD = 2462088.69;
-        ln_hequ_to_equ(&hobject, &object);
-
-        pm.ra = 0.03425 * (15.0 / 3600.0);
-        pm.dec = -0.0895 / 3600.0;
-
-        ln_get_equ_pm(&object, &pm, JD, &object);
-
-        failed += test_result("(Proper motion) RA on JD 2462088.69  ",
-                object.ra, 41.054063, 0.00001);
-        failed += test_result("(Proper motion) DEC on JD 2462088.69  ",
-                object.dec, 49.227750, 0.00001);
-
-        ln_get_equ_prec(&object, JD, &pos);
-        failed += test_result("(Precession) RA on JD 2462088.69  ",
-                pos.ra, 41.547212, 0.00003);
-        failed += test_result("(Precession) DEC on JD 2462088.69  ",
-                pos.dec, 49.348483, 0.00001);
-
-        ln_get_equ_prec2(&object, JD2000, JD, &pos);
-
-        failed += test_result("(Precession 2) RA on JD 2462088.69  ",
-                pos.ra, 41.547212, 0.00001);
-        failed += test_result("(Precession 2) DEC on JD 2462088.69  ",
-                pos.dec, 49.348483, 0.00001);
-
-        ln_get_equ_prec2(&pos, JD, JD2000, &pos2);
-
-        failed += test_result("(Precession 2) RA on JD 2451545.0  ",
-                pos2.ra, object.ra, 0.00001);
-        failed += test_result("(Precession 2) DEC on JD 2451545.0  ",
-                pos2.dec, object.dec, 0.00001);
-
-        // INTEGRAL GRB050922A coordinates lead to RA not in <0-360> range
-        pos.ra = 271.2473;
-        pos.dec = -32.0227;
-
-        grb_date.years = 2005;
-        grb_date.months = 9;
-        grb_date.days = 22;
-        grb_date.hours = 13;
-        grb_date.minutes = 43;
-        grb_date.seconds = 18.0;
-
-        JD = ln_get_julian_day(&grb_date);
-
-        ln_get_equ_prec2 (&pos, JD, JD2000, &pos2);
-
-        failed += test_result("(Precession 2) RA on JD 2451545.0  ",
-                pos2.ra, 271.1541, 0.0002);
-        failed += test_result("(Precession 2) DEC on JD 2451545.0  ",
-                pos2.dec, -32.0235, 0.0002);
-
-        // second test from AA, p. 128
-        hobject.ra.hours = 2;
-        hobject.ra.minutes = 31;
-        hobject.ra.seconds = 48.704;
-        hobject.dec.neg = 0;
-        hobject.dec.degrees = 89;
-        hobject.dec.minutes = 15;
-        hobject.dec.seconds = 50.72;
-
-        ln_hequ_to_equ (&hobject, &object);
-
-        // proper motions
-        pm.ra = ((long double) 0.19877) * (15.0 / 3600.0);
-        pm.dec = ((long double) -0.0152) / 3600.0;
-
-        ln_get_equ_pm(&object, &pm, B1900, &pos);
-
-        ln_get_equ_prec2(&pos, JD2000, B1900, &pos2);
-
-        // the position is so close to pole, that it depends a lot on how precise
-        // functions we will use. So we get such big errors compared to Meeus.
-        // I checked results agains SLAlib on-line calculator and SLAlib performs
-        // even worse then we
-
-        failed += test_result ("(Precession 2) RA on B1900  ", pos2.ra,
-                20.6412499980, 0.002);
-        failed += test_result ("(Precession 2) DEC on B1900  ", pos2.dec,
-                88.7739388888, 0.0001);
-
-        ln_get_equ_pm(&object, &pm, JD2050, &pos);
-
-        ln_get_equ_prec2(&pos, JD2000, JD2050, &pos2);
-
-        failed += test_result("(Precession 2) RA on J2050  ",
-                pos2.ra, 57.0684583320, 0.003);
-        failed += test_result("(Precession 2) DEC on J2050  ",
-                pos2.dec, 89.4542722222, 0.0001);
-
-        return failed;
-}
-
 static int vsop87_test(void)
 {
         struct ln_helio_posn pos;
@@ -1062,7 +951,6 @@ int main(int argc, const char *argv[])
         start_timer();
 
         failed += aber_prec_nut_test();
-        failed += precession_test();
         failed += vsop87_test();
         failed += elliptic_motion_test();
         failed += parabolic_motion_test ();
