@@ -75,6 +75,18 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_nutation
+    SOURCES test_nutation.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
+    NAME test_aberration
+    SOURCES test_aberration.c
+    LIBS nova unity ${MATH_LIBRARY}
+)
+
+add_unit_test(
     NAME test_apparent_position
     SOURCES test_apparent_position.c
     LIBS nova unity ${MATH_LIBRARY}
@@ -95,12 +107,6 @@ add_unit_test(
 add_unit_test(
     NAME test_utility
     SOURCES test_utility.c
-    LIBS nova unity ${MATH_LIBRARY}
-)
-
-add_unit_test(
-    NAME test_nutation
-    SOURCES test_nutation.c
     LIBS nova unity ${MATH_LIBRARY}
 )
 
