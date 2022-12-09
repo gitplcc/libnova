@@ -27,7 +27,7 @@
 
 #include <unity.h>
 
-#define ARCSEC_TENTH  (0.1 / 3600.0)
+#define MARCSEC  (0.001 / 3600.0)
 
 void setUp()
 {
@@ -39,14 +39,14 @@ void tearDown()
 
 void test_ln_get_equ_nut()
 {
-  struct ln_equ_posn mean_position = {.ra = 41.5472125, .dec = 49.3484833}; /* Tetha Persei */
+  struct ln_equ_posn mean_position = {.ra = 41.5472125, .dec = 49.34848333}; /* Tetha Persei */
   double JD = 2462088.69;  /* 2028/11/13.19 TD */
 
   struct ln_equ_posn position;
   ln_get_equ_nut(&mean_position, JD, &position);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6, 41.5599583, position.ra);
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6, 49.3484833, position.dec);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, 41.55161333, position.ra);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, 49.35021056, position.dec);
 }
 
 void test_ln_get_nutation()
@@ -56,17 +56,25 @@ void test_ln_get_nutation()
   struct ln_nutation nutation;
   ln_get_nutation(JD, &nutation);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6, -1.052222222e-3, nutation.longitude);
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6,  2.623055556e-3, nutation.obliquity);
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6,  2.344094639e+1, nutation.ecliptic);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, -1.052222222e-3, nutation.longitude);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  2.623055556e-3, nutation.obliquity);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  2.344094639e+1, nutation.ecliptic);
+
+  JD = 2448908.5;  /* 1992/10/13 00:00:0.0 TD */
+
+  ln_get_nutation(JD, &nutation);
+
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  4.418888889e-3, nutation.longitude);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, -8.5555556e-5, nutation.obliquity);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  2.344023e+1, nutation.ecliptic);
 
   JD = 2462088.69;  /* 2028/11/13.19 TD */
 
   ln_get_nutation(JD, &nutation);
 
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6,  7.513888889e-4, nutation.longitude);
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6,  4.128055556e-3, nutation.obliquity);
-  TEST_ASSERT_DOUBLE_WITHIN(1.0e-6,  2.3436e+1, nutation.ecliptic);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  4.128055556e-3, nutation.longitude);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  7.513888889e-4, nutation.obliquity);
+  TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  2.34355372e+1, nutation.ecliptic);
 }
 
 int main(int argc, char **argv)
