@@ -27,6 +27,8 @@
 
 #include <unity.h>
 
+#define MARCSEC (0.001 / 3600.0)
+
 double JD;
 struct ln_equ_posn object, pm;
 
@@ -55,43 +57,52 @@ void test_ln_get_equ_pm(void)
 {
   ln_get_equ_pm(&object, &pm, JD, &object);
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-5, 41.054063, object.ra, "RA proper motion on JD 2462088.69"
+    MARCSEC, 41.05406123525553, object.ra, "RA proper motion on JD 2462088.69"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-5, 49.227750, object.dec, "DEC proper motion on JD 2462088.69"
+    MARCSEC, 49.22774899973002, object.dec, "DEC proper motion on JD 2462088.69"
   );
 }
-
 void test_ln_get_equ_prec(void)
 {
-  struct ln_equ_posn pos;
+  /* Mean position after proper motion applied */
+  object = (struct ln_equ_posn) {
+    .ra  = 41.05406123525553,
+    .dec = 49.22774899973002
+  };
+  struct ln_equ_posn  pos;
   ln_get_equ_prec(&object, JD, &pos);
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    3.0e-5, 41.547212, pos.ra, "RA precession on JD 2462088.69"
+    MARCSEC, 41.54721259751290, pos.ra, "RA precession on JD 2462088.69"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-5, 49.348483, pos.dec, "DEC precession on JD 2462088.69"
+    MARCSEC, 49.34848211286583, pos.dec, "DEC precession on JD 2462088.69"
   );
 }
 
 void test_ln_get_equ_prec2(void)
 {
+  /* Mean position after proper motion applied */
+  object = (struct ln_equ_posn) {
+    .ra  = 41.05406123525553,
+    .dec = 49.22774899973002
+  };
   struct ln_equ_posn pos;
   ln_get_equ_prec2(&object, JD2000, JD, &pos);
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-5, 41.547212, pos.ra, "RA precession 2 on JD 2462088.69"
+    MARCSEC, 41.54721259751290, pos.ra, "RA precession 2 on JD 2462088.69"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-5, 49.348483, pos.dec, "DEC precession 2 on JD 2462088.69"
+    MARCSEC, 49.34848211286583, pos.dec, "DEC precession 2 on JD 2462088.69"
   );
 
   struct ln_equ_posn pos2;
   ln_get_equ_prec2(&pos, JD, JD2000, &pos2);
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-5, object.ra, pos2.ra, "RA precession 2 on JD 2451545.0"
+    MARCSEC, object.ra, pos2.ra, "RA precession 2 on JD 2451545.0"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-5, object.dec, pos2.dec, "DEC precession 2 on JD 2451545.0"
+    MARCSEC, object.dec, pos2.dec, "DEC precession 2 on JD 2451545.0"
   );
 }
 
@@ -102,7 +113,7 @@ void test_ln_get_equ_ra_out_0_360(void)
 
   struct ln_date grb_date = {
     .years = 2005, .months  =  9, .days    = 22,
-    .hours =   13, .minutes = 43, .seconds = 18.0
+    .hours =   16, .minutes = 06, .seconds = 59.0
   };
 
   JD = ln_get_julian_day(&grb_date);
@@ -110,10 +121,10 @@ void test_ln_get_equ_ra_out_0_360(void)
   struct ln_equ_posn pos2;
   ln_get_equ_prec2(&pos, JD, JD2000, &pos2);
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    2.0e-4, 271.1541, pos2.ra, "RA precession 2 on JD 2451545.0"
+    MARCSEC, 271.15401268, pos2.ra, "RA precession 2 on JD 2451545.0"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    2.0e-4, -32.0235, pos2.dec, "DEC precession 2 on JD 2451545.0"
+    MARCSEC, -32.02336791, pos2.dec, "DEC precession 2 on JD 2451545.0"
   );
 }
 
@@ -125,7 +136,7 @@ void test_ln_get_equ_prec_close_pole(void)
     .dec = {.neg = 0, .degrees = 89, .minutes = 15, .seconds = 50.72}
   };
 
-  ln_hequ_to_equ (&hobject, &object);
+  ln_hequ_to_equ(&hobject, &object);
 
   // proper motions
   pm = (struct ln_equ_posn) {
@@ -143,20 +154,20 @@ void test_ln_get_equ_prec_close_pole(void)
   // even worse then we
 
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    2.0e-3, 20.6412499980, pos2.ra, "RA precession 2 on B1900"
+    MARCSEC, 20.64123606, pos2.ra, "RA precession 2 on B1900"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-4, 88.7739388888, pos2.dec, "DEC precession 2 on B1900"
+    MARCSEC, 88.77393949, pos2.dec, "DEC precession 2 on B1900"
   );
 
   ln_get_equ_pm(&object, &pm, JD2050, &pos);
   ln_get_equ_prec2(&pos, JD2000, JD2050, &pos2);
 
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    3.0e-3, 57.0684583320, pos2.ra, "RA precession 2 on J2050"
+    MARCSEC, 57.06844434, pos2.ra, "RA precession 2 on J2050"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-4, 89.4542722222, pos2.dec, "DEC precession 2 on J2050"
+    MARCSEC, 89.45427109, pos2.dec, "DEC precession 2 on J2050"
   );
 }
 
