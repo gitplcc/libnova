@@ -78,38 +78,38 @@ void ln_get_equ_prec(struct ln_equ_posn *mean_position, double JD,
 
     /* calc t, zeta, eta and theta for J2000.0 Equ 20.3 */
     t =(JD - JD2000) / 36525.0;
-    t *= 1.0 / 3600.0;
+    //t *= 1.0 / 3600.0;
     t2 = t * t;
     t3 = t2 *t;
-    zeta = 2306.2181 * t + 0.30188 * t2 + 0.017998 * t3;
-    eta = 2306.2181 * t + 1.09468 * t2 + 0.041833 * t3;
+    zeta  = 2306.2181 * t + 0.30188 * t2 + 0.017998 * t3;
+    eta   = 2306.2181 * t + 1.09468 * t2 + 0.041833 * t3;
     theta = 2004.3109 * t - 0.42665 * t2 - 0.041833 * t3;
-    zeta = ln_deg_to_rad(zeta);
-    eta = ln_deg_to_rad(eta);
-    theta = ln_deg_to_rad(theta);
+    zeta  = ln_deg_to_rad(zeta  / 3600.0);
+    eta   = ln_deg_to_rad(eta   / 3600.0);
+    theta = ln_deg_to_rad(theta / 3600.0);
 
     /* calc A,B,C equ 20.4 */
-    A = cosl(mean_dec) * sinl(mean_ra + zeta);
-    B = cosl(theta) * cosl(mean_dec) *
-        cosl(mean_ra + zeta) - sinl(theta) * sinl(mean_dec);
-    C = sinl (theta) * cosl (mean_dec) *
-        cosl(mean_ra + zeta) + cosl(theta) * sinl(mean_dec);
+    A = cos(mean_dec) * sin(mean_ra + zeta);
+    B = cos(theta) * cos(mean_dec) *
+        cos(mean_ra + zeta) - sin(theta) * sin(mean_dec);
+    C = sin (theta) * cosl (mean_dec) *
+        cos(mean_ra + zeta) + cos(theta) * sin(mean_dec);
 
-    ra = atan2l(A, B) + eta;
+    ra = atan2(A, B) + eta;
 
     /* check for object near celestial pole */
     if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI)) {
         /* close to pole */
-        dec = acosl(sqrt(A * A + B * B));
+        dec = acos(sqrt(A * A + B * B));
         if (mean_dec < 0.)
             dec *= -1; /* 0 <= acos() <= PI */
     } else {
         /* not close to pole */
-        dec = asinl(C);
+        dec = asin(C);
     }
 
     /* change to degrees */
-    position->ra = ln_range_degrees(ln_rad_to_deg(ra));
+    position->ra  = ln_range_degrees(ln_rad_to_deg(ra));
     position->dec = ln_rad_to_deg(dec);
 }
 
@@ -137,44 +137,45 @@ void ln_get_equ_prec2(struct ln_equ_posn *mean_position, double fromJD,
 
     /* calc t, T, zeta, eta and theta Equ 20.2 */
     T = ((long double) (fromJD - JD2000)) / 36525.0;
-    T *= 1.0 / 3600.0;
     t = ((long double) (toJD - fromJD)) / 36525.0;
-    t *= 1.0 / 3600.0;
     T2 = T * T;
     t2 = t * t;
     t3 = t2 *t;
-    zeta = (2306.2181 + 1.39656 * T - 0.000139 * T2) *
-           t + (0.30188 - 0.000344 * T) * t2 + 0.017998 * t3;
-    eta = (2306.2181 + 1.39656 * T - 0.000139 * T2) *
-          t + (1.09468 + 0.000066 * T) * t2 + 0.018203 * t3;
-    theta = (2004.3109 - 0.85330 * T - 0.000217 * T2) *
-          t - (0.42665 + 0.000217 * T) * t2 - 0.041833 * t3;
-    zeta = ln_deg_to_rad(zeta);
-    eta = ln_deg_to_rad(eta);
-    theta = ln_deg_to_rad(theta);
+    zeta  = (2306.2181 + 1.39656 * T - 0.000139 * T2) * t
+            + (0.30188 - 0.000344 * T) * t2
+            + 0.017998 * t3;
+    eta   = (2306.2181 + 1.39656 * T - 0.000139 * T2) * t
+            + (1.09468 + 0.000066 * T) * t2
+            + 0.018203 * t3;
+    theta = (2004.3109 - 0.85330 * T - 0.000217 * T2) * t
+            - (0.42665 + 0.000217 * T) * t2
+            - 0.041833 * t3;
+    zeta  = ln_deg_to_rad(zeta  / 3600.0);
+    eta   = ln_deg_to_rad(eta   / 3600.0);
+    theta = ln_deg_to_rad(theta / 3600.0);
 
     /* calc A,B,C equ 20.4 */
-    A = cosl(mean_dec) * sinl(mean_ra + zeta);
-    B = cosl(theta) * cosl(mean_dec) * cosl(mean_ra + zeta) -
-        sinl(theta) * sinl(mean_dec);
-    C = sinl(theta) * cosl(mean_dec) * cosl(mean_ra + zeta) +
-        cosl(theta) * sinl(mean_dec);
+    A = cos(mean_dec) * sin(mean_ra + zeta);
+    B = cos(theta) * cos(mean_dec) * cos(mean_ra + zeta) -
+        sin(theta) * sin(mean_dec);
+    C = sin(theta) * cos(mean_dec) * cos(mean_ra + zeta) +
+        cos(theta) * sin(mean_dec);
 
-    ra = atan2l(A, B) + eta;
+    ra = atan2(A, B) + eta;
 
     /* check for object near celestial pole */
     if (mean_dec > (0.4 * M_PI) || mean_dec < (-0.4 * M_PI)) {
         /* close to pole */
-        dec = acosl(sqrt(A * A + B * B));
+        dec = acos(sqrt(A * A + B * B));
         if (mean_dec < 0.)
             dec *= -1; /* 0 <= acos() <= PI */
     } else {
         /* not close to pole */
-        dec = asinl(C);
+        dec = asin(C);
     }
 
     /* change to degrees */
-    position->ra = ln_range_degrees(ln_rad_to_deg(ra));
+    position->ra  = ln_range_degrees(ln_rad_to_deg(ra));
     position->dec = ln_rad_to_deg(dec);
 }
 
