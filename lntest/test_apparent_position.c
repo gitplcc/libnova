@@ -27,24 +27,18 @@
 
 #include <unity.h>
 
+#define MARCSEC  (0.001 / 3600.0)
+
 double JD;
 struct ln_equ_posn object, pm;
 
 void setUp()
 {
   /* objects position */
-  struct lnh_equ_posn hobject = {
-    .ra  = {.hours = 2, .minutes = 44, .seconds = 12.9747},
-    .dec = {.neg = 0, .degrees = 49, .minutes = 13, .seconds = 39.896}
-  };
-  ln_hequ_to_equ(&hobject, &object);
+  object = (struct ln_equ_posn) {.ra  = 41.04994167, .dec = 49.22846667};
 
   /* proper motion of object */
-  struct lnh_equ_posn hpm = {
-    .ra  = {.hours = 0, .minutes = 0, .seconds = 0.03425},
-    .dec = {.neg = 1, .degrees = 0, .minutes = 0, .seconds = 0.0895}
-  };
-  ln_hequ_to_equ(&hpm, &pm);
+  pm =  (struct ln_equ_posn) {.ra  =  1.4270833333e-4, .dec = -2.4861111111e-5};
 
   JD = 2462088.69;
 }
@@ -59,10 +53,10 @@ void test_ln_get_apparent_posn(void)
   ln_get_apparent_posn(&object, &pm, JD, &pos);
 
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-8, 41.56406641, pos.ra, "Apparent RA on JD 2462088.69"
+    MARCSEC, 41.5599646, pos.ra, "Apparent RA on JD 2462088.69"
   );
   TEST_ASSERT_DOUBLE_WITHIN_MESSAGE(
-    1.0e-8, 49.35135029, pos.dec, "Apparent RA on JD 2462088.69"
+    MARCSEC, 49.3520685, pos.dec, "Apparent RA on JD 2462088.69"
   );
 }
 
