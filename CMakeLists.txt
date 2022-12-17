@@ -163,7 +163,6 @@ set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 
 # Allow in-tree target execution for PE/COFF systems
 if (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
-    file(MAKE_DIRECTORY bin)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 endif (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 
