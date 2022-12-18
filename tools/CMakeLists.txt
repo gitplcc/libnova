@@ -1,3 +1,4 @@
 add_executable(elp82 elp82.c)
-target_include_directories(elp82 PRIVATE "${PROJECT_SOURCE_DIR}/src")
-target_link_libraries(elp82 $<$<PLATFORM_ID:UNIX>:m>)
+target_compile_features(elp82 PUBLIC c_std_11)
+set_target_properties(elp82 PROPERTIES C_EXTENSIONS OFF)
+target_link_libraries(elp82 $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>)

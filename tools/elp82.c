@@ -28,234 +28,255 @@ Copyright (C) 2015 Liam Girdwood <lgirdwood@gmail.com>
 #include <errno.h>
 #include <math.h>
 
-#define HEADER	"#include \"lunar-priv.h\"\n"
+#define HEADER "#include \"lunar-priv.h\"\n"
+
+const char hdr_fname[] = "elp.h";
+const char dat_fname[] = "ELP%d";
+const char c_fname[]   = "elp%d.c";
 
 struct elp {
-	int i;
-	FILE *fdi, *fdo, *fdh;
-	int size;
+    int i;
+    FILE *fdi, *fdo, *fdh;
+    int size;
 };
 
 /* elp 1 - 3 */
 static void main_parse(struct elp *elp, const char *prefix)
 {
-	char line[1024], out[256], hdr[256];
-	double d[11];
-	int match;
+    char line[1024], out[256], hdr[256];
+    double d[11];
+    int match;
 
-	/* ignore first line of inpput */
-	fgets(line, 1024, elp->fdi);
+    /* ignore first line of inpput */
+    fgets(line, 1024, elp->fdi);
 
-	/* write header */
-	fputs(HEADER, elp->fdo);
-	sprintf(hdr, "const struct %s elp%d[] = {\n", prefix, elp->i);
-	fputs(hdr, elp->fdo);
+    /* write header */
+    fputs(HEADER, elp->fdo);
+    sprintf(hdr, "const struct %s elp%d[] = {\n", prefix, elp->i);
+    fputs(hdr, elp->fdo);
 
-	elp->size = 0;
+    elp->size = 0;
 
-	/* read input line by line for coefficients */
-	match = fscanf(elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-			&d[0], &d[1], &d[2], &d[3], &d[4],
-			&d[5], &d[6], &d[7], &d[8], &d[9], &d[10]);
-	while (match == 11) {
-		sprintf(out, "{{%f, %f, %f, %f}, %f, {%f, %f, %f, %f, %f, %f}},\n",
-			d[0], d[1], d[2], d[3], d[4], d[5], d[6],
-			d[7], d[8], d[9], d[10]);
-		fputs(out, elp->fdo);
-		elp->size++;
+    /* read input line by line for coefficients */
+    match = fscanf(
+        elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+        &d[0], &d[1], &d[2], &d[3], &d[4],
+        &d[5], &d[6], &d[7], &d[8], &d[9], &d[10]
+    );
+    while (match == 11)
+    {
+        sprintf(
+            out, "{{%f, %f, %f, %f}, %f, {%f, %f, %f, %f, %f, %f}},\n",
+            d[0], d[1], d[2], d[3], d[4], d[5], d[6],
+            d[7], d[8], d[9], d[10]
+        );
+        fputs(out, elp->fdo);
+        elp->size++;
 
-		match = fscanf(elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-			&d[0], &d[1], &d[2], &d[3], &d[4],
-			&d[5], &d[6], &d[7], &d[8], &d[9], &d[10]);
-	}
+        match = fscanf(
+            elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+            &d[0], &d[1], &d[2], &d[3], &d[4],
+            &d[5], &d[6], &d[7], &d[8], &d[9], &d[10]
+        );
+    }
 
-	fputs("};\n", elp->fdo);
+    fputs("};\n", elp->fdo);
 }
 
 /* elp 4 - 9 and the rest*/
 static void earth_parse(struct elp *elp, const char *prefix)
 {
-	char line[1024], out[256], hdr[256];
-	double d[8];
-	int match;
+    char line[1024], out[256], hdr[256];
+    double d[8];
+    int match;
 
-	/* ignore first line of inpput */
-	fgets(line, 1024, elp->fdi);
+    /* ignore first line of inpput */
+    fgets(line, 1024, elp->fdi);
 
-	/* write header */
-	fputs(HEADER, elp->fdo);
-	sprintf(hdr, "const struct %s elp%d[] = {\n", prefix, elp->i);
-	fputs(hdr, elp->fdo);
+    /* write header */
+    fputs(HEADER, elp->fdo);
+    sprintf(hdr, "const struct %s elp%d[] = {\n", prefix, elp->i);
+    fputs(hdr, elp->fdo);
 
-	elp->size = 0;
+    elp->size = 0;
 
-	match = fscanf(elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf",
-			&d[0], &d[1], &d[2], &d[3], &d[4],
-			&d[5], &d[6], &d[7]);
+    match = fscanf(
+        elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf",
+        &d[0], &d[1], &d[2], &d[3], &d[4],
+        &d[5], &d[6], &d[7]
+    );
 
-	/* read input line by line for coefficients */
-	while (match == 8) {
+    /* read input line by line for coefficients */
+    while (match == 8)
+    {
+        sprintf(
+            out, "{%f, {%f, %f, %f, %f}, %f, %f, %f},\n",
+            d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7]
+        );
+        fputs(out, elp->fdo);
+        elp->size++;
 
-		sprintf(out, "{%f, {%f, %f, %f, %f}, %f, %f, %f},\n",
-			d[0], d[1], d[2], d[3], d[4], d[5], d[6],
-			d[7]);
-		fputs(out, elp->fdo);
-		elp->size++;
+        match = fscanf(
+            elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf",
+            &d[0], &d[1], &d[2], &d[3], &d[4], &d[5], &d[6], &d[7]
+        );
+    }
 
-		match = fscanf(elp->fdi, "%lf %lf %lf %lf %lf %lf %lf %lf",
-			&d[0], &d[1], &d[2], &d[3], &d[4],
-			&d[5], &d[6], &d[7]);
-	}
-
-	fputs("};\n", elp->fdo);
+    fputs("};\n", elp->fdo);
 }
 
 /* used for elp 10 - 21 */
 static void planet_parse(struct elp *elp, const char *prefix)
 {
-	char line[1024], out[256], hdr[256];
-	double d[14];
-	int match;
+    char line[1024], out[256], hdr[256];
+    double d[14];
+    int match;
 
-	/* ignore first line of inpput */
-	fgets(line, 1024, elp->fdi);
+    /* ignore first line of inpput */
+    fgets(line, 1024, elp->fdi);
 
-	/* write header */
-	fputs(HEADER, elp->fdo);
-	sprintf(hdr, "const struct %s elp%d[] = {\n", prefix, elp->i);
-	fputs(hdr, elp->fdo);
+    /* write header */
+    fputs(HEADER, elp->fdo);
+    sprintf(hdr, "const struct %s elp%d[] = {\n", prefix, elp->i);
+    fputs(hdr, elp->fdo);
 
-	elp->size = 0;
+    elp->size = 0;
 
-	match = fscanf(elp->fdi,
-			"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-			&d[0], &d[1], &d[2], &d[3], &d[4],
-			&d[5], &d[6], &d[7], &d[8], &d[9],
-			&d[10], &d[11], &d[12], &d[13]);
+    match = fscanf(
+        elp->fdi,
+        "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+        &d[0], &d[1], &d[2], &d[3], &d[4],
+        &d[5], &d[6], &d[7], &d[8], &d[9],
+        &d[10], &d[11], &d[12], &d[13]
+    );
 
-	/* read input line by line for coefficients */
-	while (match == 14) {
+    /* read input line by line for coefficients */
+    while (match == 14)
+    {
+        sprintf(
+            out,
+            "{{%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f}, %f, %f, %f},\n",
+            d[0], d[1], d[2], d[3], d[4], d[5], d[6],
+            d[7], d[8], d[9], d[10], d[11], d[12], d[13]
+        );
+        fputs(out, elp->fdo);
+        elp->size++;
 
-		sprintf(out,
-			"{{%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f}, %f, %f, %f},\n",
-			d[0], d[1], d[2], d[3], d[4], d[5], d[6],
-			d[7], d[8], d[9], d[10], d[11], d[12], d[13]);
-		fputs(out, elp->fdo);
-		elp->size++;
+        match = fscanf(
+            elp->fdi,
+            "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+            &d[0], &d[1], &d[2], &d[3], &d[4],
+            &d[5], &d[6], &d[7], &d[8], &d[9],
+            &d[10], &d[11], &d[12], &d[13]
+        );
+    }
 
-		match = fscanf(elp->fdi,
-			"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-			&d[0], &d[1], &d[2], &d[3], &d[4],
-			&d[5], &d[6], &d[7], &d[8], &d[9],
-			&d[10], &d[11], &d[12], &d[13]);
-	}
-
-	fputs("};\n", elp->fdo);
+    fputs("};\n", elp->fdo);
 }
-
 
 int main(int argc, char *argv[])
 {
-	struct elp elp;
-	char file[256];
+    struct elp elp;
+    char file[256];
 
-	memset(&elp, 0, sizeof(elp));
+    memset(&elp, 0, sizeof(elp));
 
-	/* open output header file */
-	elp.fdh = fopen("elp.h", "w");
-	if (elp.fdo < 0) {
-		fprintf(stderr, "error: cannot open ouput file ELP.h\n");
-		fprintf(stderr, "error: please download ELP data from ftp://ftp.imcce.fr/pub/ephem/moon/elp82b/\n");
-		exit(-errno);
-	}
-	fprintf(stdout, "opened output header ELP.h\n");
+    /* open output header file */
+    elp.fdh = fopen(hdr_fname, "w");
+    if (!elp.fdh)
+    {
+        fprintf(stderr, "error: cannot open ouput file %s\n", hdr_fname);
+        exit(-errno);
+    }
+    fprintf(stdout, "opened output header %s\n", hdr_fname);
 
-	for (elp.i = 1; elp.i <= 36; elp.i++) {
+    for (elp.i = 1; elp.i <= 36; elp.i++)
+    {
+        /* open input file */
+        sprintf(file, dat_fname, elp.i);
+        elp.fdi = fopen(file, "r");
+        if (!elp.fdi)
+        {
+            fprintf(stderr, "error: cannot open input file %s\n", file);
+            fprintf(stderr, "error: please download ELP data from ftp://ftp.imcce.fr/pub/ephem/moon/elp82b/\n");
+            exit(-errno);
+        }
+        fprintf(stdout, "opened input %s\n", file);
 
-		/* open input file */
-		sprintf(file, "ELP%d", elp.i); 
-		elp.fdi = fopen(file, "r");
-		if (elp.fdi < 0) {
-			fprintf(stderr, "error: cannot open input file %s\n", file);
-			exit(-errno);
-		}
-		fprintf(stdout, "opened input %s\n", file);
+        /* open output file */
+        sprintf(file, c_fname, elp.i);
+        elp.fdo = fopen(file, "w");
+        if (!elp.fdo)
+        {
+            fprintf(stderr, "error: cannot open ouput file %s\n", file);
+            exit(-errno);
+        }
+        fprintf(stdout, "opened output %s\n", file);
 
-		/* open output file */
-		sprintf(file, "elp%d.c", elp.i);
-		elp.fdo = fopen(file, "w");
-		if (elp.fdo < 0) {
-			fprintf(stderr, "error: cannot open ouput file %s\n", file);
-			exit(-errno);
-		}
-		fprintf(stdout, "opened output %s\n", file);
+        switch (elp.i) {
+            case 1:
+            case 2:
+            case 3:
+                main_parse(&elp, "main_problem ");
+                break;
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                earth_parse(&elp, "earth_pert ");
+                break;
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+                planet_parse(&elp, "planet_pert ");
+                break;
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+                earth_parse(&elp, "earth_pert ");
+                break;
+            case 28:
+            case 29:
+            case 30:
+                earth_parse(&elp, "earth_pert ");
+                break;
+            case 31:
+            case 32:
+            case 33:
+                earth_parse(&elp, "earth_pert ");
+                break;
+            case 34:
+            case 35:
+            case 36:
+                earth_parse(&elp, "earth_pert ");
+                break;
+            default:
+                exit(-EINVAL);
+                break;
+        }
 
-		switch (elp.i) {
-		case 1:
-		case 2:
-		case 3:
-			main_parse(&elp, "main_problem ");
-			break;
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-			earth_parse(&elp, "earth_pert ");
-			break;
-		case 10:
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-		case 15:
-		case 16:
-		case 17:
-		case 18:
-		case 19:
-		case 20:
-		case 21:
-			planet_parse(&elp, "planet_pert ");
-			break;
-		case 22:
-		case 23:
-		case 24:
-		case 25:
-		case 26:
-		case 27:
-			earth_parse(&elp, "earth_pert ");
-			break;
-		case 28:
-		case 29:
-		case 30:
-			earth_parse(&elp, "earth_pert ");
-			break;
-		case 31:
-		case 32:
-		case 33:
-			earth_parse(&elp, "earth_pert ");
-			break;
-		case 34:
-		case 35:
-		case 36:
-			earth_parse(&elp, "earth_pert ");
-			break;
-		default:
-			exit(-EINVAL);
-			break;
-		}
+        fclose(elp.fdo);
+        fclose(elp.fdi);
 
+        /* write header */
+        sprintf(file, "#define ELP%d_SIZE       %d\n", elp.i, elp.size);
+        fputs(file, elp.fdh);
+    }
 
-		fclose(elp.fdo);
-		fclose(elp.fdi);
-
-		/* write header */
-		sprintf(file, "#define ELP%d_SIZE	%d\n", elp.i, elp.size); 
-		fputs(file, elp.fdh);
-	}
-
-	fclose(elp.fdh);
-	return 0;
+    fclose(elp.fdh);
+    return 0;
 }
-

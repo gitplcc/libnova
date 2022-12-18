@@ -178,6 +178,8 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
             $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
             $<$<BOOL:${WIN32}>:__WIN32__>
     )
+    target_compile_features(${EXECUTABLE_NAME} PUBLIC c_std_11)
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES C_EXTENSIONS OFF)
     target_link_libraries(
         ${EXECUTABLE_NAME}
         nova
@@ -194,7 +196,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(src)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-
     if(BUILD_EXAMPLES)
         add_subdirectory(examples)
     endif(BUILD_EXAMPLES)
@@ -215,7 +216,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     if(BUILD_DOCS)
         add_subdirectory(doc)
     endif(BUILD_DOCS)
-
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 # Export stuff
