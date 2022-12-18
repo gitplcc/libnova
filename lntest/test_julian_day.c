@@ -29,8 +29,12 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <threads.h>
 #include <time.h>
+#if HAVE_THREADS_H
+#include <threads.h>
+#elif HAVE_SLEEP
+#include <synchapi.h>
+#endif
 
 static char *tz_old;
 
@@ -46,7 +50,14 @@ void setUp()
   else
     tz_old = NULL;
 
-  setenv("TZ", "CET", 1);
+#if HAVE_SETENV
+  setenv("TZ", "CET-01CEST", 1);
+#elif HAVE_PUTENV_S && HAVE_TZSET
+  _putenv_s("TZ", "CET-01CEST");
+  _tzset();
+#else
+  #error "Unsupported platform."
+#endif
 }
 
 void tearDown()
@@ -54,7 +65,14 @@ void tearDown()
   if (!tz_old)
     return;
 
+#if HAVE_SETENV
   setenv("TZ", tz_old, 1);
+#elif HAVE_PUTENV_S && HAVE_TZSET
+  _putenv_s("TZ", tz_old);
+  _tzset();
+#else
+  #error "Unsupported platform."
+#endif
   free(tz_old);
 }
 
@@ -235,11 +253,15 @@ void test_ln_get_julian_from_sys()
 {
   double JD1 = ln_get_julian_from_sys();
 
+#if HAVE_THREADS_H
   thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 500000000}, NULL);
+#elif HAVE_SLEEP
+  Sleep(1500L);
+#endif
 
   double JD2 = ln_get_julian_from_sys();
 
-  TEST_ASSERT_DOUBLE_WITHIN(0.1 / 86400.0, 1.5 /86400.0, JD2 - JD1);
+  TEST_ASSERT_DOUBLE_WITHIN(0.1 / 86400.0, 1.5 / 86400.0, JD2 - JD1);
 }
 
 void test_ln_get_julian_from_timet()

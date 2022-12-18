@@ -12,6 +12,8 @@
 #cmakedefine01 HAVE_USLEEP
 #cmakedefine01 HAVE_SLEEP
 
+#cmakedefine01 HAVE_THREADS_H
+
 #cmakedefine01 HAVE_STDBOOL_H
 
 #cmakedefine01 HAVE_STRING_H
@@ -34,6 +36,9 @@
 #cmakedefine01 HAVE_ATAN2L
 #cmakedefine01 HAVE_NAN
 #cmakedefine01 HAVE_FMODL
+
+#cmakedefine01 HAVE_SETENV
+#cmakedefine01 HAVE_PUTENV_S
 
 #cmakedefine01 HAVE_SYS_STAT_H
 #cmakedefine01 HAVE_DLFCN_H

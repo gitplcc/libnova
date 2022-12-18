@@ -102,11 +102,13 @@ CHECK_INCLUDE_FILE(sys/time.h HAVE_SYS_TIME_H)
 CHECK_INCLUDE_FILES("time.h;sys/time.h" TIME_WITH_SYS_TIME)
 CHECK_STRUCT_HAS_MEMBER(tm tm_year sys/time.h TM_IN_SYS_TIME LANGUAGE C)
 check_symbol_exists(gettimeofday sys/time.h HAVE_GETTIMEOFDAY)
-check_symbol_exists(tzset time.h HAVE_TZSET)
+check_symbol_exists(_tzset time.h HAVE_TZSET)
 check_symbol_exists(gmtime_r time.h HAVE_GMTIME_R)
 check_symbol_exists(nanosleep time.h HAVE_NANOSLEEP)
 check_symbol_exists(usleep time.h HAVE_USLEEP)
-check_symbol_exists(Sleep Windows.h HAVE_SLEEP)
+check_symbol_exists(Sleep synchapi.h HAVE_SLEEP)
+
+CHECK_INCLUDE_FILE(threads.h HAVE_THREADS_H)
 
 CHECK_INCLUDE_FILE(stdbool.h HAVE_STDBOOL_H)
 
@@ -133,6 +135,9 @@ check_symbol_exists(asinl math.h HAVE_ASINL)
 check_symbol_exists(atan2l math.h HAVE_ATAN2L)
 check_symbol_exists(nan math.h HAVE_NAN)
 check_symbol_exists(fmodl math.h HAVE_FMODL)
+
+check_symbol_exists(setenv stdlib.h HAVE_SETENV)
+check_symbol_exists(_putenv_s stdlib.h HAVE_PUTENV_S)
 
 CHECK_INCLUDE_FILE(sys/stat.h HAVE_SYS_STAT_H)
 CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
