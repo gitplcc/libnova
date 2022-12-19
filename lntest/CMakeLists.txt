@@ -11,7 +11,12 @@ macro(add_unit_test)
             C_EXTENSIONS OFF
             RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
         )
-    target_link_libraries(${TEST_NAME} ${TEST_LIBS})
+    target_link_libraries(
+        ${TEST_NAME}
+        ${TEST_LIBS}
+        nova unity
+        $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
+    )
     add_test(
         NAME ${TEST_NAME}
         WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
@@ -23,139 +28,116 @@ endmacro()
 add_unit_test(
     NAME test_lntest
     SOURCES test.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_heliocentric_time
     SOURCES test_heliocentric_time.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_julian_day
     SOURCES test_julian_day.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_dynamical_time
     SOURCES test_dynamical_time.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_sidereal_time
     SOURCES test_sidereal_time.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_parallax
     SOURCES test_parallax.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_rise_set
     SOURCES test_rise_set.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_airmass
     SOURCES test_airmass.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_angular_separation
     SOURCES test_angular_separation.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_nutation
     SOURCES test_nutation.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_precession
     SOURCES test_precession.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_aberration
     SOURCES test_aberration.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_aber_prec_nut
     SOURCES test_aber_prec_nut.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_apparent_position
     SOURCES test_apparent_position.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_solar
     SOURCES test_solar.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_ticket9
     SOURCES test_ticket9.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_utility
     SOURCES test_utility.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_transform
     SOURCES test_transform.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_elliptic_motion
     SOURCES test_elliptic_motion.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_parabolic_motion
     SOURCES test_parabolic_motion.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_hyperbolic_motion
     SOURCES test_hyperbolic_motion.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_lunar
     SOURCES test_lunar.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_unit_test(
     NAME test_constellation
     SOURCES test_constellation.c
-    LIBS nova unity ${MATH_LIBRARY}
 )
 
 add_custom_target(check
