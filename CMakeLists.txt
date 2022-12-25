@@ -16,6 +16,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
 
     # Packaging support
     set(CPACK_PACKAGE_VENDOR "Vendor name")
@@ -215,9 +216,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif(BUILD_EXAMPLES)
 
     if(BUILD_TESTING)
-        include(CTest)
-
-        add_subdirectory(extern/Unity)
+        add_subdirectory(extern/Unity EXCLUDE_FROM_ALL)
         target_compile_definitions(unity
             PUBLIC
                 UNITY_INCLUDE_DOUBLE
