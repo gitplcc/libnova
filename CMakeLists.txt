@@ -33,16 +33,16 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Set a default build type if none was specified
     set(DEFAULT_BUILD_TYPE "Release")
     if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-      set(DEFAULT_BUILD_TYPE "Debug")
+        set(DEFAULT_BUILD_TYPE "Debug")
     endif()
 
     if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-      message(STATUS "Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
-      set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
-          STRING "Choose the type of build." FORCE)
-      # Set the possible values of build type for cmake-gui
-      set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
-        "MinSizeRel" "RelWithDebInfo")
+        message(STATUS "Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
+        set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
+            STRING "Choose the type of build." FORCE)
+        # Set the possible values of build type for cmake-gui
+        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+          "MinSizeRel" "RelWithDebInfo")
     endif()
     # Snippet from https://blog.kitware.com/cmake-and-the-default-build-type/
     ###########################################################################
@@ -77,9 +77,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         if(GIT_SUBMODULE)
             message(STATUS "Submodule update")
             execute_process(
-              COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-              WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-              RESULT_VARIABLE GIT_SUBMOD_RESULT
+                COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                RESULT_VARIABLE GIT_SUBMOD_RESULT
             )
             if(NOT GIT_SUBMOD_RESULT EQUAL "0")
                 message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
