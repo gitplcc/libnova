@@ -111,16 +111,27 @@ endif (BUILD_SHARED_LIBS)
 add_library(Libnova::nova ALIAS nova)
 
 # install stuff
-install(
-    TARGETS  nova
-    EXPORT   LibnovaTargets
-    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    install(
+        TARGETS nova
+        EXPORT  LibnovaTargets
+        RUNTIME
+            DESTINATION ${CMAKE_INSTALL_BINDIR}
+            COMPONENT   runtime
+        LIBRARY
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT   development
+        ARCHIVE
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT   development
+        INCLUDES
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            COMPONENT   development
+    )
 
-install(
-    FILES       ${LIBRARY_PUBLIC_HEADERS}
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${HEADER_PATH}"
-)
+    install(
+        FILES       ${LIBRARY_PUBLIC_HEADERS}
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${HEADER_PATH}"
+        COMPONENT   development
+    )
+endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

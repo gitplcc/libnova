@@ -201,7 +201,9 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
         $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
     )
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
-    install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+        install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endmacro(SETUP_EXECUTABLE EXECUTABLE_NAME)
 
 # add include directory for all projects
@@ -209,6 +211,25 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # traverse the sub directories
 add_subdirectory(src)
+
+# Export stuff
+write_basic_package_version_file(
+    LibnovaConfigVersion.cmake
+    VERSION ${libnova_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+export(
+    EXPORT LibnovaTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/LibnovaTargets.cmake"
+    NAMESPACE Libnova::
+)
+
+configure_file(
+    cmake/LibnovaConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
+    COPYONLY
+)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     if(BUILD_EXAMPLES)
@@ -233,44 +254,45 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     if(BUILD_DOCS)
         add_subdirectory(doc)
     endif(BUILD_DOCS)
+
+    install(EXPORT LibnovaTargets
+        FILE
+            LibnovaTargets.cmake
+        NAMESPACE
+            Libnova::
+        DESTINATION
+            "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+        COMPONENT
+            development
+    )
+
+    install(
+        FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfigVersion.cmake"
+        DESTINATION
+            "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+        COMPONENT
+            development
+    )
+
+    cpack_add_component(
+        runtime
+        DISPLAY_NAME "Runtime files"
+        DESCRIPTION "Files needed at runtime."
+        REQUIRED
+    )
+
+    cpack_add_component(
+        development
+        DISPLAY_NAME "Development files"
+        DESCRIPTION "Files needed to link against libnova."
+        DEPENDS runtime
+    )
+
+    if(BUILD_REGISTER_PKG)
+        set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+        export(PACKAGE Libnova)
+    endif(BUILD_REGISTER_PKG)
+
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-
-# Export stuff
-
-write_basic_package_version_file(
-    LibnovaConfigVersion.cmake
-    VERSION ${libnova_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
-
-export(
-    EXPORT LibnovaTargets
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/LibnovaTargets.cmake"
-    NAMESPACE Libnova::
-)
-configure_file(
-    cmake/LibnovaConfig.cmake
-    "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
-    COPYONLY
-)
-
-install(EXPORT LibnovaTargets
-    FILE
-        LibnovaTargets.cmake
-    NAMESPACE
-        Libnova::
-    DESTINATION
-        "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
-)
-install(
-    FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfigVersion.cmake"
-    DESTINATION
-        "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
-)
-
-if(BUILD_REGISTER_PKG)
-    set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
-    export(PACKAGE Libnova)
-endif(BUILD_REGISTER_PKG)
