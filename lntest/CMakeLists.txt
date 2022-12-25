@@ -96,6 +96,11 @@ add_unit_test(
 )
 
 add_unit_test(
+    NAME test_vsop87
+    SOURCES test_vsop87.c
+)
+
+add_unit_test(
     NAME test_solar
     SOURCES test_solar.c
 )
