@@ -15,28 +15,8 @@
 #cmakedefine01 HAVE_NANOSLEEP
 #cmakedefine01 HAVE_SLEEP
 
-#cmakedefine01 HAVE_STDBOOL_H
-
-#cmakedefine01 HAVE_STRING_H
 #cmakedefine01 HAVE_STRINGS_H
-#cmakedefine01 HAVE_STRCHR
-#cmakedefine01 HAVE_STRPBRK
-#cmakedefine01 HAVE_STRTOL
 #cmakedefine01 HAVE_STRTOK_R
-#cmakedefine01 HAVE_ISBLANK
-
-#cmakedefine01 HAVE_MODF
-#cmakedefine01 HAVE_POW
-#cmakedefine01 HAVE_SQRT
-#cmakedefine01 HAVE_CBRT
-#cmakedefine01 HAVE_ROUND
-#cmakedefine01 HAVE_COSL
-#cmakedefine01 HAVE_SINL
-#cmakedefine01 HAVE_ACOSL
-#cmakedefine01 HAVE_ASINL
-#cmakedefine01 HAVE_ATAN2L
-#cmakedefine01 HAVE_NAN
-#cmakedefine01 HAVE_FMODL
 
 #cmakedefine01 HAVE_SETENV
 #cmakedefine01 HAVE_PUTENV_S

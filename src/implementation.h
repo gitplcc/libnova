@@ -19,25 +19,9 @@
 #ifndef _LN_IMPLEMENTATION_H
 #define _LN_IMPLEMENTATION_H
 
-#include <time.h>
-
-#if !HAVE_CBRT
-/* Simple cube root */
-double cbrt(double x);
-#endif
-
 #if !HAVE_STRTOK_R
 /* Catches calls to the POSIX strtok_r and converts them to a related WIN32 version. */
 char *strtok_r(char *str, const char *sep, char **last);
-#endif
-
-#if !HAVE_NAN
-/* Not a Number function generator */
-double nan(const char *code);
-#endif
-
-#if !HAVE_ISBLANK
-#define isblank(c)  ((c)== ' ' || (c)=='\t')
 #endif
 
 #endif /* _LN_IMPLEMENTATION_H */

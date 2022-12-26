@@ -59,23 +59,3 @@ char *strtok_r(char *str, const char *sep, char **last)
 }
 
 #endif /* !HAVE_STRTOK_R */
-
-/* C89 substitutions for C99 functions. */
-
-#ifndef HAVE_CBRT
-/* Simple cube root */
-double cbrt(double x)
-{
-    return pow(x, 1.0 / 3.0);
-}
-#endif /* !HAVE_CBRT */
-
-#ifndef HAVE_NAN
-/* Not a Number function generator */
-double nan(const char* code)
-{
-    double zero = 0.0;
-
-    return zero / 0.0;
-}
-#endif /* !HAVE_NAN */
