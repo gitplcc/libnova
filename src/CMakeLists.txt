@@ -101,6 +101,7 @@ if (BUILD_SHARED_LIBS)
     set_target_properties(nova elp
         PROPERTIES
             C_EXTENSIONS ON
+            $<$<BOOL:${LN_HAVE_IPO_SUPPORT}>:INTERPROCEDURAL_OPTIMIZATION TRUE>
             POSITION_INDEPENDENT_CODE ON
             C_VISIBILITY_PRESET hidden
             VERSION "${libnova_VERSION_MAJOR}.${libnova_VERSION_MINOR}.${libnova_VERSION_PATCH}"

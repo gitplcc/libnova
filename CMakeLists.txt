@@ -7,6 +7,7 @@ include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 include(CheckCCompilerFlag)
+include(CheckIPOSupported)
 include(CMakeDependentOption)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -150,6 +151,11 @@ CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 
 configure_file(config.h.in.cmake config.h)
 
+check_ipo_supported(RESULT LN_HAVE_IPO_SUPPORT OUTPUT LN_IPO_ERRORINFO)
+if(NOT LN_HAVE_IPO_SUPPORT)
+    message(WARNING "IPO unsupported: ${LN_IPO_ERRORINFO}")
+endif(NOT LN_HAVE_IPO_SUPPORT)
+
 # Compiler scpecific flags
 check_c_compiler_flag(/GS- HAVE_BUFSECCHK_FLAG)
 if(HAVE_BUFSECCHK_FLAG)
@@ -193,6 +199,7 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     set_target_properties(${EXECUTABLE_NAME}
         PROPERTIES
             C_EXTENSIONS ON
+            $<$<BOOL:${LN_HAVE_IPO_SUPPORT}>:INTERPROCEDURAL_OPTIMIZATION TRUE>
     )
     target_link_libraries(
         ${EXECUTABLE_NAME}
