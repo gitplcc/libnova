@@ -190,7 +190,10 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
             $<$<BOOL:${WIN32}>:__WIN32__>
     )
     target_compile_features(${EXECUTABLE_NAME} PUBLIC c_std_11)
-    set_target_properties(${EXECUTABLE_NAME} PROPERTIES C_EXTENSIONS OFF)
+    set_target_properties(${EXECUTABLE_NAME}
+        PROPERTIES
+            C_EXTENSIONS ON
+    )
     target_link_libraries(
         ${EXECUTABLE_NAME}
         nova

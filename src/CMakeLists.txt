@@ -82,7 +82,6 @@ add_library(nova
     $<TARGET_OBJECTS:elp>
 )
 target_compile_features(nova PUBLIC c_std_11)
-set_target_properties(nova PROPERTIES C_EXTENSIONS OFF)
 target_compile_definitions(nova
     PUBLIC
         $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,LIBNOVA_SHARED,LIBNOVA_STATIC>
@@ -101,6 +100,7 @@ target_include_directories(
 if (BUILD_SHARED_LIBS)
     set_target_properties(nova elp
         PROPERTIES
+            C_EXTENSIONS ON
             POSITION_INDEPENDENT_CODE ON
             C_VISIBILITY_PRESET hidden
             VERSION "${libnova_VERSION_MAJOR}.${libnova_VERSION_MINOR}.${libnova_VERSION_PATCH}"

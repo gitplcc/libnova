@@ -8,7 +8,7 @@ macro(add_unit_test)
     set_target_properties(
         ${TEST_NAME}
         PROPERTIES
-            C_EXTENSIONS OFF
+            C_EXTENSIONS ON
             RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
         )
     target_link_libraries(
