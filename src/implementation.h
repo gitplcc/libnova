@@ -21,29 +21,6 @@
 
 #include <time.h>
 
-#if !HAVE_GETTIMEOFDAY
-
-#if !HAVE_SYS_TIME_H
-
-struct timeval
-{
-    time_t  tv_sec;         /* count of seconds since Jan. 1, 1970 */
-    long    tv_usec;        /* and microseconds */
-};
-
-struct timezone
-{
-    int     tz_minuteswest; /* Minutes west of GMT */
-    int     tz_dsttime;     /* DST correction offset */
-};
-
-#endif /* !HAVE_SYS_TIME_H */
-
-/* Catches calls to the POSIX gettimeofday and converts them to a related WIN32 version. */
-int gettimeofday(struct timeval *tp, struct timezone *tzp);
-
-#endif /* !HAVE_GETTIMEOFDAY */
-
 #if !HAVE_CBRT
 /* Simple cube root */
 double cbrt(double x);

@@ -46,28 +46,6 @@
 
 /* This section is for Win32 substitutions. */
 
-#if !HAVE_GETTIMEOFDAY
-#include <sys/types.h>
-#include <sys/timeb.h>
-
-/* Catches calls to the POSIX gettimeofday and converts them to a related WIN32 version. */
-int gettimeofday(struct timeval *tv, struct timezone *tz)
-{
-    struct _timeb timeptr;
-
-    _ftime_s (&timeptr);
-
-    tv->tv_sec = timeptr.time;
-    tv->tv_usec = timeptr.millitm * 1000;
-
-    tz->tz_dsttime = timeptr.dstflag;
-    tz->tz_dsttime = timeptr.timezone;
-
-    return 0;
-}
-
-#endif /* !HAVE_GETTIMEOFDAY */
-
 #if !HAVE_GMTIME_R
 
 /* Catches calls to the POSIX gmtime_r and converts them to a related WIN32 version. */

@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
 #include <time.h>
 #if TIME_WITH_SYS_TIME
@@ -184,23 +185,25 @@ void ln_get_date_from_tm(struct tm *t, struct ln_date *date)
 */
 void ln_get_date_from_sys(struct ln_date *date)
 {
-    struct tm * gmt;
-    struct timeval tv;
-    struct timezone tz;
-
-    /* get current time with microseconds precission*/
-    gettimeofday(&tv, &tz);
+    /* get current time with nanoseconds precission */
+    struct timespec now;
+    int ret;
+#if HAVE_CLOCK_GETTIME
+    ret = clock_gettime(CLOCK_REALTIME, &now);
+#elif HAVE_TIMESPEC_GET
+    ret = timespec_get(&now, TIME_UTC);
+#else
+    #error "Unsupported platform."
+#endif
+    assert(!ret);
 
     /* convert to UTC time representation */
-#if __MINGW64__
-    time_t buf = tv.tv_sec;
-    gmt = gmtime(&buf);
-#else
-    gmt = gmtime(&tv.tv_sec);
-#endif
+    struct tm *gmt;
+    gmt = gmtime(&now.tv_sec);
+    assert(gmt);
 
     /* fill in date struct */
-    date->seconds = gmt->tm_sec + ((double)tv.tv_usec / 1000000);
+    date->seconds = (double)gmt->tm_sec + 1.0e-9 * (double)now.tv_nsec;
     date->minutes = gmt->tm_min;
     date->hours = gmt->tm_hour;
     date->days = gmt->tm_mday;

@@ -5,9 +5,10 @@
 #cmakedefine01 HAVE_SYS_TIME_H
 #cmakedefine01 TIME_WITH_SYS_TIME
 #cmakedefine01 TM_IN_SYS_TIME
-#cmakedefine01 HAVE_GETTIMEOFDAY
 #cmakedefine01 HAVE_GMTIME_R
 #cmakedefine01 HAVE_TZSET
+#cmakedefine01 HAVE_CLOCK_GETTIME
+#cmakedefine01 HAVE_TIMESPEC_GET
 #cmakedefine01 HAVE_NANOSLEEP
 #cmakedefine01 HAVE_USLEEP
 #cmakedefine01 HAVE_SLEEP
