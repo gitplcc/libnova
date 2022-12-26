@@ -107,16 +107,19 @@ check_symbol_exists(alloca alloca.h HAVE_ALLOCA)
 
 CHECK_INCLUDE_FILE(sys/time.h HAVE_SYS_TIME_H)
 CHECK_INCLUDE_FILES("time.h;sys/time.h" TIME_WITH_SYS_TIME)
+CHECK_INCLUDE_FILE(synchapi.h HAVE_SYNCHAPI_H)
 CHECK_STRUCT_HAS_MEMBER(tm tm_year sys/time.h TM_IN_SYS_TIME LANGUAGE C)
 check_symbol_exists(_tzset time.h HAVE_TZSET)
 check_symbol_exists(clock_gettime time.h HAVE_CLOCK_GETTIME)
 check_symbol_exists(timespec_get time.h HAVE_TIMESPEC_GET)
 check_symbol_exists(gmtime_r time.h HAVE_GMTIME_R)
+check_symbol_exists(thrd_sleep threads.h HAVE_THRD_SLEEP)
 check_symbol_exists(nanosleep time.h HAVE_NANOSLEEP)
-check_symbol_exists(usleep time.h HAVE_USLEEP)
-check_symbol_exists(Sleep synchapi.h HAVE_SLEEP)
-
-CHECK_INCLUDE_FILE(threads.h HAVE_THREADS_H)
+if(HAVE_SYNCHAPI_H)
+    check_symbol_exists(Sleep synchapi.h HAVE_SLEEP)
+else(HAVE_SYNCHAPI_H)
+    check_symbol_exists(Sleep Windows.h HAVE_SLEEP)
+endif(HAVE_SYNCHAPI_H)
 
 CHECK_INCLUDE_FILE(stdbool.h HAVE_STDBOOL_H)
 

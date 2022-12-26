@@ -30,10 +30,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#if HAVE_THREADS_H
-#include <threads.h>
+#if HAVE_THRD_SLEEP
+    #include <threads.h>
 #elif HAVE_SLEEP
-#include <synchapi.h>
+    #if HAVE_SYNCHAPI_H
+        #include <synchapi.h>
+    #else
+        #include <Windows.h>
+    #endif
+#else
+    #error "Unsupported platform."
 #endif
 
 static char *tz_old;
@@ -253,10 +259,14 @@ void test_ln_get_julian_from_sys()
 {
   double JD1 = ln_get_julian_from_sys();
 
-#if HAVE_THREADS_H
+#if HAVE_THRD_SLEEP
   thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 500000000}, NULL);
+#elif HAVE_NANOSLEEP
+  nanosleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 500000000}, NULL);
 #elif HAVE_SLEEP
   Sleep(1500L);
+#else
+  #error "Unsupported platform."
 #endif
 
   double JD2 = ln_get_julian_from_sys();

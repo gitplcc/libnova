@@ -20,43 +20,10 @@ Copyright 2008-2009 Petr Kubanek*/
 
 #include <libnova/libnova.h>
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-
-#if !HAVE_NANOSLEEP && !HAVE_USLEEP && HAVE_SLEEP
-#include <Windows.h>
-#endif
-
-void test_milisleep(unsigned long ms)
-{
-#if HAVE_NANOSLEEP
-    struct timespec delay;
-    if (ms < 1000) {
-        delay.tv_sec = 0;
-        delay.tv_nsec = 1000000 * ms;
-    }
-    else {
-        ldiv_t rslt = ldiv(ms, 1000);
-        delay.tv_sec = rslt.quot;
-        delay.tv_nsec = 1000000 * rslt.rem;
-    }
-    nanosleep(&delay, NULL);
-#elif HAVE_USLEEP
-    usleep(1000 * ms);
-#elif HAVE_SLEEP
-    Sleep(ms);
-#else
-#error Unsupported compiler.
-#endif
-}
-
-/*
- * Define DATE or SYS_DATE for testing VSOP87 theory with other JD
- */
-//#define DATE
-//#define SYS_DATE
 
 // holds number of tests
 static int test_number = 0;
