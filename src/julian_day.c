@@ -153,12 +153,17 @@ void ln_get_date(double JD, struct ln_date *date)
 */
 void ln_get_date_from_timet (time_t *t, struct ln_date *date)
 {
-    struct tm gmt;
-
     /* convert to UTC time representation */
-    gmtime_r(t, &gmt);
+    struct tm *pgmt;
+#if HAVE_GMTIME_R
+    struct tm gmt;
+    pgmt = gmtime_r(t, &gmt);
+#else
+    pgmt = gmtime(t);
+#endif
+    assert(pgmt);
 
-    ln_get_date_from_tm(&gmt, date);
+    ln_get_date_from_tm(pgmt, date);
 }
 
 /*! \fn void ln_get_date_from_tm(struct tm *t, struct ln_date *date)
@@ -198,17 +203,22 @@ void ln_get_date_from_sys(struct ln_date *date)
     assert(!ret);
 
     /* convert to UTC time representation */
-    struct tm *gmt;
-    gmt = gmtime(&now.tv_sec);
-    assert(gmt);
+    struct tm *pgmt;
+#if HAVE_GMTIME_R
+    struct tm gmt;
+    pgmt = gmtime_r(&now.tv_sec, &gmt);
+#else
+    pgmt = gmtime(&now.tv_sec);
+#endif
+    assert(pgmt);
 
     /* fill in date struct */
-    date->seconds = (double)gmt->tm_sec + 1.0e-9 * (double)now.tv_nsec;
-    date->minutes = gmt->tm_min;
-    date->hours = gmt->tm_hour;
-    date->days = gmt->tm_mday;
-    date->months = gmt->tm_mon + 1;
-    date->years = gmt->tm_year + 1900;
+    date->seconds = (double)pgmt->tm_sec + 1.0e-9 * (double)now.tv_nsec;
+    date->minutes = pgmt->tm_min;
+    date->hours = pgmt->tm_hour;
+    date->days = pgmt->tm_mday;
+    date->months = pgmt->tm_mon + 1;
+    date->years = pgmt->tm_year + 1900;
 }
 
 

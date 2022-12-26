@@ -46,26 +46,6 @@
 
 /* This section is for Win32 substitutions. */
 
-#if !HAVE_GMTIME_R
-
-/* Catches calls to the POSIX gmtime_r and converts them to a related WIN32 version. */
-struct tm *gmtime_r(time_t *t, struct tm *gmt)
-{
-#if defined(__MINGW32__) || defined(__MINGW64__)
-    gmtime_s(gmt, t);
-#else
-    struct tm *local_gmt;
-    local_gmt = gmtime(t);
-
-    if (local_gmt != 0)
-        memcpy(gmt, local_gmt, sizeof (gmt));
-#endif /* defined(__MINGW32__) || defined(__MINGW64__) */
-
-    return gmt;
-}
-
-#endif /* HAVE_GMTIME_R */
-
 #if !HAVE_STRTOK_R
 
 /* Catches calls to the POSIX strtok_r and converts them to a related WIN32 version. */

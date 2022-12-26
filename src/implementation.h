@@ -31,11 +31,6 @@ double cbrt(double x);
 char *strtok_r(char *str, const char *sep, char **last);
 #endif
 
-#if !HAVE_GMTIME_R
-/* Catches calls to the POSIX gmtime_r and converts them to a related WIN32 version. */
-struct tm *gmtime_r (time_t *t, struct tm *gmt);
-#endif
-
 #if !HAVE_NAN
 /* Not a Number function generator */
 double nan(const char *code);
