@@ -4,7 +4,7 @@ macro(add_unit_test)
     set(multiValueArgs SOURCES LIBS)
     cmake_parse_arguments(TEST "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${TEST_NAME} ${TEST_SOURCES})
-    target_compile_features(${TEST_NAME} PUBLIC c_std_11)
+    target_compile_features(${TEST_NAME} PRIVATE c_std_11)
     set_target_properties(
         ${TEST_NAME}
         PROPERTIES

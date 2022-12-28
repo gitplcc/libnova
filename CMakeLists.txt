@@ -176,7 +176,7 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
             $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
             $<$<BOOL:${WIN32}>:__WIN32__>
     )
-    target_compile_features(${EXECUTABLE_NAME} PUBLIC c_std_11)
+    target_compile_features(${EXECUTABLE_NAME} PRIVATE c_std_11)
     set_target_properties(${EXECUTABLE_NAME}
         PROPERTIES
             C_EXTENSIONS ON
