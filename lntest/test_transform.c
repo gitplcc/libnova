@@ -37,7 +37,7 @@ void tearDown()
 {
 }
 
-void test_get_ecl_from_equ()
+void test_get_ecl_from_equ(void)
 {
   /* Pollux equatorial (2000) */
   struct ln_equ_posn object = {
@@ -53,17 +53,17 @@ void test_get_ecl_from_equ()
   TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,   6.68264899, ecl.lat);
 }
 
-void test_get_ecl_from_rect()
+void test_get_ecl_from_rect(void)
 {
   TEST_IGNORE();
 }
 
-void test_get_equ2000_from_gal()
+void test_get_equ2000_from_gal(void)
 {
   TEST_IGNORE();
 }
 
-void test_get_equ_from_ecl()
+void test_get_equ_from_ecl(void)
 {
   struct ln_lnlat_posn ecl = {.lng =  113.21555278, .lat = 6.68264899};
   double JD = 2446896.30625;  /* 1987/4/10 19:21:0.0 UTC */
@@ -75,7 +75,7 @@ void test_get_equ_from_ecl()
   TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  28.02618333, equ.dec);
 }
 
-void test_get_equ_from_gal()
+void test_get_equ_from_gal(void)
 {
   /* Gal pole */
   struct ln_gal_posn gal = {.l = 0.0, .b = 90.0};
@@ -87,7 +87,7 @@ void test_get_equ_from_gal()
   TEST_ASSERT_DOUBLE_WITHIN(MARCSEC,  27.40, equ.dec);
 }
 
-void test_get_equ_from_hrz()
+void test_get_equ_from_hrz(void)
 {
   /* Object position */
   struct ln_equ_posn object = {
@@ -118,7 +118,7 @@ void test_get_equ_from_hrz()
   TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, object.dec, object_equ.dec);
 }
 
-void test_get_gal_from_equ()
+void test_get_gal_from_equ(void)
 {
   /* Gal pole */
   struct ln_equ_posn equ = {.ra = 192.25, .dec =  27.4};
@@ -129,7 +129,7 @@ void test_get_gal_from_equ()
   TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, 90.0, gal.b);
 }
 
-void test_get_gal_from_equ2000()
+void test_get_gal_from_equ2000(void)
 {
   // Swift triger 174738
   struct ln_equ_posn equ = {.ra = 125.2401, .dec =  31.9260};
@@ -141,7 +141,7 @@ void test_get_gal_from_equ2000()
   TEST_ASSERT_DOUBLE_WITHIN(0.005,  31.92, gal.b);
 }
 
-void test_get_hrz_from_equ()
+void test_get_hrz_from_equ(void)
 {
   /* Object position */
   struct ln_equ_posn object = {
@@ -163,7 +163,7 @@ void test_get_hrz_from_equ()
   TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, 68.03429264, hrz.az);
 }
 
-void test_get_rect_from_helio()
+void test_get_rect_from_helio(void)
 {
   TEST_IGNORE();
 }

@@ -37,7 +37,7 @@ void tearDown()
 {
 }
 
-void test_ln_get_dynamical_time_diff()
+void test_ln_get_dynamical_time_diff(void)
 {
   double JD = 2448972.5;  /* 1992/12/16 00:00:00 UT */
 
@@ -46,7 +46,7 @@ void test_ln_get_dynamical_time_diff()
   TEST_ASSERT_DOUBLE_WITHIN(0.1, 59.0, TD);
 }
 
-void test_ln_get_jde()
+void test_ln_get_jde(void)
 {
   double JD = 2451544.5;  /* 2000/01/01 00:00:00 UT */
 

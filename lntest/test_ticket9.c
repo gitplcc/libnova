@@ -51,7 +51,7 @@ void tearDown()
 {
 }
 
-static void test_ticket9()
+static void test_ticket9(void)
 {
   struct ln_rst_time rst;
   int ret = ln_get_solar_rst(JD, &observer, &rst);

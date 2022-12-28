@@ -82,7 +82,7 @@ void tearDown()
   free(tz_old);
 }
 
-void test_ln_date_to_zonedate()
+void test_ln_date_to_zonedate(void)
 {
   struct ln_date date = {
     .years   = 1954,
@@ -104,7 +104,7 @@ void test_ln_date_to_zonedate()
   TEST_ASSERT_EQUAL(7200, zonedate.gmtoff);
 }
 
-void test_ln_get_date()
+void test_ln_get_date(void)
 {
   double JD = 2434923.5;
   struct ln_date date;
@@ -118,7 +118,7 @@ void test_ln_get_date()
   TEST_ASSERT_EQUAL_DOUBLE(0.0, date.seconds);
 }
 
-void test_ln_get_date_from_mpc()
+void test_ln_get_date_from_mpc(void)
 {
   struct ln_date date;
   int ret = ln_get_date_from_mpc(&date, "K01AM");
@@ -132,7 +132,7 @@ void test_ln_get_date_from_mpc()
   TEST_ASSERT_EQUAL_DOUBLE(0.0, date.seconds);
 }
 
-void test_ln_get_date_from_sys()
+void test_ln_get_date_from_sys(void)
 {
   time_t now_time;
   time(&now_time);
@@ -149,7 +149,7 @@ void test_ln_get_date_from_sys()
   TEST_ASSERT_DOUBLE_WITHIN(1.0, utcdate->tm_sec, now_date.seconds);
 }
 
-void test_ln_get_date_from_timet()
+void test_ln_get_date_from_timet(void)
 {
   time_t now_time;
   time(&now_time);
@@ -166,7 +166,7 @@ void test_ln_get_date_from_timet()
   TEST_ASSERT_EQUAL_DOUBLE(utcdate->tm_sec, now_date.seconds);
 }
 
-void test_ln_get_date_from_tm()
+void test_ln_get_date_from_tm(void)
 {
   time_t now_time;
   time(&now_time);
@@ -183,7 +183,7 @@ void test_ln_get_date_from_tm()
   TEST_ASSERT_EQUAL_DOUBLE(utcdate->tm_sec, now_date.seconds);
 }
 
-void test_ln_get_day_of_week()
+void test_ln_get_day_of_week(void)
 {
   /* Get julian day for 30/06/1954 00:00:00 */
   struct ln_date date = {
@@ -199,7 +199,7 @@ void test_ln_get_day_of_week()
   TEST_ASSERT_EQUAL_INT(3, wday);
 }
 
-void test_ln_get_julian_day()
+void test_ln_get_julian_day(void)
 {
   /* Get julian day for 04/10/1957 19:00:00 */
   struct ln_date date = {
@@ -248,14 +248,14 @@ void test_ln_get_julian_day()
   TEST_ASSERT_EQUAL_DOUBLE(2434923.5, JD);
 }
 
-void test_ln_get_julian_from_mpc()
+void test_ln_get_julian_from_mpc(void)
 {
   double JD = ln_get_julian_from_mpc("J969U");
 
   TEST_ASSERT_EQUAL_DOUBLE(2450356.5, JD);
 }
 
-void test_ln_get_julian_from_sys()
+void test_ln_get_julian_from_sys(void)
 {
   double JD1 = ln_get_julian_from_sys();
 
@@ -274,7 +274,7 @@ void test_ln_get_julian_from_sys()
   TEST_ASSERT_DOUBLE_WITHIN(0.1 / 86400.0, 1.5 / 86400.0, JD2 - JD1);
 }
 
-void test_ln_get_julian_from_timet()
+void test_ln_get_julian_from_timet(void)
 {
   time_t utc_time = mktime(
     &(struct tm) {
@@ -289,7 +289,7 @@ void test_ln_get_julian_from_timet()
   TEST_ASSERT_DOUBLE_WITHIN(0.001 / 86400.0, 2446895.5, JD);
 }
 
-void test_ln_get_julian_local_date()
+void test_ln_get_julian_local_date(void)
 {
   double JD = ln_get_julian_local_date(
     &(struct ln_zonedate) {
@@ -302,7 +302,7 @@ void test_ln_get_julian_local_date()
   TEST_ASSERT_DOUBLE_WITHIN(0.001 / 86400.0, 2446895.5, JD);
 }
 
-void test_ln_get_local_date()
+void test_ln_get_local_date(void)
 {
   struct ln_zonedate localdate;
   ln_get_local_date(2459410.5, &localdate);
@@ -316,7 +316,7 @@ void test_ln_get_local_date()
   TEST_ASSERT_EQUAL(7200, localdate.gmtoff);
 }
 
-void test_ln_get_timet_from_julian()
+void test_ln_get_timet_from_julian(void)
 {
   double JD = 2446895.5;  /* 1987/4/10 00:00:00.0 UT */
 
@@ -332,7 +332,7 @@ void test_ln_get_timet_from_julian()
   TEST_ASSERT_EQUAL( 0, utcdate->tm_sec);
 }
 
-void test_ln_zonedate_to_date()
+void test_ln_zonedate_to_date(void)
 {
   struct ln_zonedate zonedate = {
     .years   = 1954,

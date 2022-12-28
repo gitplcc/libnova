@@ -41,31 +41,31 @@ void tearDown()
 {
 }
 
-static void test_rad_to_deg()
+static void test_rad_to_deg(void)
 {
   TEST_ASSERT_EQUAL_DOUBLE(90.0, ln_rad_to_deg(M_PI_2));
 }
 
-static void test_deg_to_rad()
+static void test_deg_to_rad(void)
 {
   TEST_ASSERT_EQUAL_DOUBLE(M_PI_4, ln_deg_to_rad(45.0));
 }
 
-static void test_hms_to_deg()
+static void test_hms_to_deg(void)
 {
   struct ln_hms hms = {.hours = 23, .minutes = 1, .seconds = 0.01};
 
   TEST_ASSERT_EQUAL_DOUBLE(345.25004166666666666666666666667, ln_hms_to_deg(&hms));
 }
 
-static void test_hms_to_rad()
+static void test_hms_to_rad(void)
 {
   struct ln_hms hms = {.hours = 23, .minutes = 1, .seconds = 0.01};
 
   TEST_ASSERT_EQUAL_DOUBLE(6.0257499697309445286330327630781, ln_hms_to_rad(&hms));
 }
 
-static void test_deg_to_hms()
+static void test_deg_to_hms(void)
 {
   struct ln_hms hms;
   ln_deg_to_hms(360345.25004166666666666666666667, &hms);
@@ -74,7 +74,7 @@ static void test_deg_to_hms()
   TEST_ASSERT_DOUBLE_WITHIN(1e-6, 0.01, hms.seconds);
 }
 
-static void test_rad_to_hms()
+static void test_rad_to_hms(void)
 {
   struct ln_hms hms;
   ln_rad_to_hms(6289.2110571493174214539197993221, &hms);
@@ -83,21 +83,21 @@ static void test_rad_to_hms()
   TEST_ASSERT_DOUBLE_WITHIN(1e-6, 0.01, hms.seconds);
 }
 
-static void test_dms_to_deg()
+static void test_dms_to_deg(void)
 {
   struct ln_dms dms = {.degrees = 359, .minutes = 1, .seconds = 0.01};
 
   TEST_ASSERT_EQUAL_DOUBLE(359.01666944444444444444444444444, ln_dms_to_deg(&dms));
 }
 
-static void test_dms_to_rad()
+static void test_dms_to_rad(void)
 {
   struct ln_dms dms = {.degrees = 359, .minutes = 1, .seconds = 0.01};
 
   TEST_ASSERT_EQUAL_DOUBLE(6.2660229513496770137058031663269, ln_dms_to_rad(&dms));
 }
 
-static void test_deg_to_dms()
+static void test_deg_to_dms(void)
 {
   struct ln_dms dms;
   ln_deg_to_dms(31345.25004166666666666666666667, &dms);
@@ -107,7 +107,7 @@ static void test_deg_to_dms()
   TEST_ASSERT_DOUBLE_WITHIN(1e-6, 0.15, dms.seconds);
 }
 
-static void test_rad_to_dms()
+static void test_rad_to_dms(void)
 {
   struct ln_dms dms;
   ln_rad_to_dms(547.07781808797311337497717099461, &dms);
@@ -117,7 +117,7 @@ static void test_rad_to_dms()
   TEST_ASSERT_DOUBLE_WITHIN(1e-6, 0.15, dms.seconds);
 }
 
-static void test_range_degrees()
+static void test_range_degrees(void)
 {
   TEST_ASSERT_DOUBLE_WITHIN(1e-9,
     2.77777777777777777778e-6,
@@ -125,7 +125,7 @@ static void test_range_degrees()
   );
 }
 
-static void test_range_radians()
+static void test_range_radians(void)
 {
   TEST_ASSERT_EQUAL_DOUBLE(
     0.5873026462311421393814996765736,
@@ -133,7 +133,7 @@ static void test_range_radians()
   );
 }
 
-static void test_range_radians2()
+static void test_range_radians2(void)
 {
   TEST_ASSERT_EQUAL_DOUBLE(
     -5.6958826609484443375437870899854,

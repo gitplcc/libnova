@@ -37,7 +37,7 @@ void tearDown()
 {
 }
 
-void test_ln_get_equ_nut()
+void test_ln_get_equ_nut(void)
 {
   struct ln_equ_posn mean_position = {.ra = 41.5472125, .dec = 49.34848333}; /* Tetha Persei */
   double JD = 2462088.69;  /* 2028/11/13.19 TD */
@@ -49,7 +49,7 @@ void test_ln_get_equ_nut()
   TEST_ASSERT_DOUBLE_WITHIN(MARCSEC, 49.35021056, position.dec);
 }
 
-void test_ln_get_nutation()
+void test_ln_get_nutation(void)
 {
   double JD = 2446895.5;  /* 1987/4/10 00:00:0.0 TD */
 
