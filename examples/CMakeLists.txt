@@ -1,3 +1,10 @@
+if(LN_HAVE_IPO_SUPPORT)
+    set_directory_properties(
+        PROPERTIES
+            INTERPROCEDURAL_OPTIMIZATION TRUE
+    )
+endif(LN_HAVE_IPO_SUPPORT)
+
 SETUP_EXECUTABLE(asteroid)
 SETUP_EXECUTABLE(comet)
 SETUP_EXECUTABLE(lunar)

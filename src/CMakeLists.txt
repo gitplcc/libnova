@@ -1,3 +1,10 @@
+if(LN_HAVE_IPO_SUPPORT)
+    set_directory_properties(
+        PROPERTIES
+            INTERPROCEDURAL_OPTIMIZATION TRUE
+    )
+endif(LN_HAVE_IPO_SUPPORT)
+
 add_subdirectory(elp)
 
 set(HEADER_PATH libnova)
@@ -101,7 +108,6 @@ if (BUILD_SHARED_LIBS)
     set_target_properties(nova elp
         PROPERTIES
             C_EXTENSIONS ON
-            $<$<BOOL:${LN_HAVE_IPO_SUPPORT}>:INTERPROCEDURAL_OPTIMIZATION TRUE>
             $<$<BOOL:${CMAKE_C_LINK_PIE_SUPPORTED}>:POSITION_INDEPENDENT_CODE TRUE>
             C_VISIBILITY_PRESET hidden
             VERSION "${libnova_VERSION_MAJOR}.${libnova_VERSION_MINOR}.${libnova_VERSION_PATCH}"
