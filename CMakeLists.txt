@@ -8,6 +8,7 @@ include(CheckSymbolExists)
 include(CheckStructHasMember)
 include(CheckCCompilerFlag)
 include(CheckIPOSupported)
+include(CheckPIESupported)
 include(CMakeDependentOption)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -133,9 +134,19 @@ CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 configure_file(config.h.in.cmake config.h)
 
 check_ipo_supported(RESULT LN_HAVE_IPO_SUPPORT OUTPUT LN_IPO_ERRORINFO)
-if(NOT LN_HAVE_IPO_SUPPORT)
-    message(WARNING "IPO unsupported: ${LN_IPO_ERRORINFO}")
-endif(NOT LN_HAVE_IPO_SUPPORT)
+if(LN_HAVE_IPO_SUPPORT)
+    message(STATUS "IPO supported.")
+else(LN_HAVE_IPO_SUPPORT)
+    string(STRIP ${LN_IPO_ERRORINFO} LN_IPO_ERRORINFO)
+    message(WARNING "IPO unsupported: ${LN_IPO_ERRORINFO}.")
+endif(LN_HAVE_IPO_SUPPORT)
+check_pie_supported(OUTPUT_VARIABLE LN_PIE_ERRORINFO LANGUAGES C)
+if(CMAKE_C_LINK_PIE_SUPPORTED)
+    message(STATUS "PIE supported.")
+else(CMAKE_C_LINK_PIE_SUPPORTED)
+    string(STRIP ${LN_PIE_ERRORINFO} LN_PIE_ERRORINFO)
+    message(WARNING "PIE unsupported: ${LN_PIE_ERRORINFO}.")
+endif(CMAKE_C_LINK_PIE_SUPPORTED)
 
 # Compiler scpecific flags
 check_c_compiler_flag(/GS- HAVE_BUFSECCHK_FLAG)
@@ -181,6 +192,7 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
         PROPERTIES
             C_EXTENSIONS ON
             $<$<BOOL:${LN_HAVE_IPO_SUPPORT}>:INTERPROCEDURAL_OPTIMIZATION TRUE>
+            $<$<BOOL:${CMAKE_C_LINK_PIE_SUPPORTED}>:POSITION_INDEPENDENT_CODE TRUE>
     )
     target_link_libraries(
         ${EXECUTABLE_NAME}
