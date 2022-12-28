@@ -213,20 +213,20 @@ add_subdirectory(src)
 
 # Export stuff
 write_basic_package_version_file(
-    LibnovaConfigVersion.cmake
+    NovaConfigVersion.cmake
     VERSION ${libnova_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
 export(
-    EXPORT LibnovaTargets
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/LibnovaTargets.cmake"
-    NAMESPACE Libnova::
+    EXPORT NovaTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/NovaTargets.cmake"
+    NAMESPACE Nova::
 )
 
 configure_file(
-    cmake/LibnovaConfig.cmake
-    "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
+    cmake/NovaConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/NovaConfig.cmake"
     COPYONLY
 )
 
@@ -254,23 +254,23 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         add_subdirectory(doc)
     endif(BUILD_DOCS)
 
-    install(EXPORT LibnovaTargets
+    install(EXPORT NovaTargets
         FILE
-            LibnovaTargets.cmake
+            NovaTargets.cmake
         NAMESPACE
-            Libnova::
+            Nova::
         DESTINATION
-            "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+            "${CMAKE_INSTALL_LIBDIR}/cmake/Nova"
         COMPONENT
             development
     )
 
     install(
         FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfig.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/LibnovaConfigVersion.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/NovaConfig.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/NovaConfigVersion.cmake"
         DESTINATION
-            "${CMAKE_INSTALL_LIBDIR}/cmake/libnova"
+            "${CMAKE_INSTALL_LIBDIR}/cmake/Nova"
         COMPONENT
             development
     )
@@ -291,7 +291,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
     if(BUILD_REGISTER_PKG)
         set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
-        export(PACKAGE Libnova)
+        export(PACKAGE Nova)
     endif(BUILD_REGISTER_PKG)
 
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

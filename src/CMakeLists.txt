@@ -98,8 +98,7 @@ target_compile_definitions(nova
         $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_DEPRECATE>
         $<$<BOOL:${WIN32}>:__WIN32__>
 )
-target_include_directories(
-    nova
+target_include_directories(nova
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
@@ -112,16 +111,17 @@ if (BUILD_SHARED_LIBS)
             C_VISIBILITY_PRESET hidden
             VERSION "${libnova_VERSION_MAJOR}.${libnova_VERSION_MINOR}.${libnova_VERSION_PATCH}"
             SOVERSION ${libnova_VERSION_MAJOR}
+            EXPORT_NAME libnova
     )
 endif (BUILD_SHARED_LIBS)
 
-add_library(Libnova::nova ALIAS nova)
+add_library(Nova::libnova ALIAS nova)
 
 # install stuff
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     install(
         TARGETS nova
-        EXPORT  LibnovaTargets
+        EXPORT  NovaTargets
         RUNTIME
             DESTINATION ${CMAKE_INSTALL_BINDIR}
             COMPONENT   runtime
