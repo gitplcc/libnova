@@ -1,1 +1,1 @@
-include("${CMAKE_CURRENT_LIST_DIR}/Libnova.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/LibnovaTargets.cmake")

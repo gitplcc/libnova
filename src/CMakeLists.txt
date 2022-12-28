@@ -131,9 +131,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         ARCHIVE
             DESTINATION ${CMAKE_INSTALL_LIBDIR}
             COMPONENT   development
-        INCLUDES
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            COMPONENT   development
     )
 
     install(
