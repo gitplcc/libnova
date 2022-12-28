@@ -42,13 +42,7 @@
 #include <libnova/libnova.h>
 #include <libnova/utility.h>
 
-#if HAVE_STDBOOL_H
 #include <stdbool.h>
-#else
-typedef int bool;
-#define true 1
-#define false 0
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -251,18 +245,10 @@ double ln_range_degrees(double angle)
     if (angle >= 0.0 && angle < 360.0)
         return angle;
 
-#if defined HAVE_FMODL
     temp = fmodl(angle, 360.0L);
     if (temp < 0.0)
         temp += 360.0;
     return temp;
-#else
-    temp = (int)(angle / 360);
-    if (angle < 0.0)
-        temp --;
-    temp *= 360.0;
-    return angle - temp;
-#endif
 }
 
 /* puts a large angle in the correct range 0 - 2PI radians */
@@ -273,19 +259,10 @@ double ln_range_radians(double angle)
     if (angle >= 0.0 && angle < (2.0 * M_PI))
         return angle;
 
-#if defined HAVE_FMODL
     temp = fmodl(angle, M_PI * 2.0L);
     if (temp < 0.0)
         temp += M_PI * 2.0L;
     return temp;
-#else
-    temp = (int)(angle / (M_PI * 2.0));
-
-    if (angle < 0.0)
-        temp --;
-    temp *= (M_PI * 2.0);
-    return angle - temp;
-#endif
 }
 
 /* puts a large angle in the correct range -2PI - 2PI radians */
@@ -297,13 +274,7 @@ double ln_range_radians2(double angle)
     if (angle > (-2.0 * M_PI) && angle < (2.0 * M_PI))
         return angle;
 
-#if defined HAVE_FMODL
     return fmodl(angle, M_PI * 2.0);
-#else
-    temp = (int)(angle / (M_PI * 2.0));
-    temp *= (M_PI * 2.0);
-    return angle - temp;
-#endif
 }
 
 /* add seconds to hms */
