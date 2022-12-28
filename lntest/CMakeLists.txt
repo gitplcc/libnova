@@ -10,7 +10,6 @@ macro(add_unit_test)
         PROPERTIES
             C_EXTENSIONS ON
             $<$<BOOL:${LN_HAVE_IPO_SUPPORT}>:INTERPROCEDURAL_OPTIMIZATION TRUE>
-            RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
         )
     target_link_libraries(
         ${TEST_NAME}
@@ -18,11 +17,23 @@ macro(add_unit_test)
         nova unity
         $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
     )
-    add_test(
-        NAME ${TEST_NAME}
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
-        COMMAND ${TEST_NAME}
+    get_target_property(
+        ${TEST_NAME}_RUNTIME_OUTPUT_DIRECTORY
+        ${TEST_NAME}
+        RUNTIME_OUTPUT_DIRECTORY
     )
+    if(${${TEST_NAME}_RUNTIME_OUTPUT_DIRECTORY})
+        add_test(
+            NAME ${TEST_NAME}
+            COMMAND ${TEST_NAME}
+            WORKING_DIRECTORY "${${TEST_NAME}_RUNTIME_OUTPUT_DIRECTORY}"
+        )
+    else(${${TEST_NAME}_RUNTIME_OUTPUT_DIRECTORY})
+        add_test(
+            NAME ${TEST_NAME}
+            COMMAND ${TEST_NAME}
+        )
+    endif(${${TEST_NAME}_RUNTIME_OUTPUT_DIRECTORY})
     list(APPEND TESTNAMES ${TEST_NAME})
 endmacro()
 
