@@ -17,6 +17,7 @@
 
 #cmakedefine01 HAVE_STRINGS_H
 #cmakedefine01 HAVE_STRTOK_R
+#cmakedefine01 HAVE_STRDUP
 
 #cmakedefine01 HAVE_SETENV
 #cmakedefine01 HAVE_PUTENV_S

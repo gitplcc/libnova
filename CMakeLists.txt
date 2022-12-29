@@ -124,6 +124,7 @@ endif(HAVE_SYNCHAPI_H)
 
 CHECK_INCLUDE_FILE(strings.h HAVE_STRINGS_H)
 check_symbol_exists(strtok_r string.h HAVE_STRTOK_R)
+check_symbol_exists(strdup string.h HAVE_STRDUP)
 
 check_symbol_exists(setenv stdlib.h HAVE_SETENV)
 check_symbol_exists(_putenv_s stdlib.h HAVE_PUTENV_S)

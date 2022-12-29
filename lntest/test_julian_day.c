@@ -49,9 +49,13 @@ void setUp()
   const char *tz_current = getenv("TZ");
   if (tz_current)
   {
+  #if HAVE_STRDUP
+    tz_old = strdup(tz_current);
+  #else
     size_t buf_size = strlen(tz_current) + 1;
     tz_old = malloc(buf_size);
-    strncpy(tz_old, tz_current, buf_size);
+    memcpy(tz_old, tz_current, buf_size);
+  #endif
   }
   else
     tz_old = NULL;
