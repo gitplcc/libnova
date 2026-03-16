@@ -1,15 +1,8 @@
-if(LN_HAVE_IPO_SUPPORT)
-    set_directory_properties(
-        PROPERTIES
-            INTERPROCEDURAL_OPTIMIZATION TRUE
-    )
-endif(LN_HAVE_IPO_SUPPORT)
-
 add_subdirectory(elp)
 
 set(HEADER_PATH libnova)
 
-set(LIBRARY_PUBLIC_HEADERS
+set(LIBNOVA_PUBLIC_HEADERS
     ${HEADER_PATH}/julian_day.h
     ${HEADER_PATH}/dynamical_time.h
     ${HEADER_PATH}/sidereal_time.h
@@ -48,47 +41,59 @@ set(LIBRARY_PUBLIC_HEADERS
     ${HEADER_PATH}/constellation.h
 )
 
-add_library(nova
-    ${LIBRARY_PUBLIC_HEADERS}
-    julian_day.c
-    dynamical_time.c
-    sidereal_time.c
-    transform.c
-    nutation.c
-    aberration.c
-    apparent_position.c
-    solar.c
-    precession.c
-    proper_motion.c
-    mercury.c
-    venus.c
-    earth.c
-    mars.c
-    jupiter.c
-    saturn.c
-    uranus.c
-    neptune.c
-    pluto.c
-    vsop87.c
-    lunar.c
-    elliptic_motion.c
-    asteroid.c
-    comet.c
-    parabolic_motion.c
-    utility.c
-    refraction.c
-    rise_set.c
-    angular_separation.c
-    hyperbolic_motion.c
-    parallax.c
-    airmass.c
-    heliocentric_time.c
-    constellation.c
-    misc.c
-    implementation.c
-    $<TARGET_OBJECTS:elp>
+set(LIBNOVA_SRCS
+      julian_day.c
+      dynamical_time.c
+      sidereal_time.c
+      transform.c
+      nutation.c
+      aberration.c
+      apparent_position.c
+      solar.c
+      precession.c
+      proper_motion.c
+      mercury.c
+      venus.c
+      earth.c
+      mars.c
+      jupiter.c
+      saturn.c
+      uranus.c
+      neptune.c
+      pluto.c
+      vsop87.c
+      lunar.c
+      elliptic_motion.c
+      asteroid.c
+      comet.c
+      parabolic_motion.c
+      utility.c
+      refraction.c
+      rise_set.c
+      angular_separation.c
+      hyperbolic_motion.c
+      parallax.c
+      airmass.c
+      heliocentric_time.c
+      constellation.c
+      misc.c
+      implementation.c
+)
+
+add_library(nova)
+target_sources(nova
+    PRIVATE
+        ${LIBNOVA_SRCS}
+        $<TARGET_OBJECTS:elp>
+    PUBLIC
+        FILE_SET HEADERS FILES
+            ${LIBNOVA_PUBLIC_HEADERS}
 )
 target_compile_features(nova PRIVATE c_std_11)
+set_target_properties(nova
+    PROPERTIES
+        INTERPROCEDURAL_OPTIMIZATION ${LN_HAVE_IPO_SUPPORT}
+)
 target_compile_definitions(nova
     PUBLIC
         $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,LIBNOVA_SHARED,LIBNOVA_STATIC>
@@ -107,13 +112,16 @@ if (BUILD_SHARED_LIBS)
     set_target_properties(nova elp
         PROPERTIES
             C_EXTENSIONS ON
-            $<$<BOOL:${CMAKE_C_LINK_PIE_SUPPORTED}>:POSITION_INDEPENDENT_CODE TRUE>
+            POSITION_INDEPENDENT_CODE ${CMAKE_C_LINK_PIE_SUPPORTED}
             C_VISIBILITY_PRESET hidden
             VERSION "${libnova_VERSION_MAJOR}.${libnova_VERSION_MINOR}.${libnova_VERSION_PATCH}"
             SOVERSION ${libnova_VERSION_MAJOR}
             EXPORT_NAME libnova
     )
 endif (BUILD_SHARED_LIBS)
+if(MATH_LIBRARY)
+    target_link_libraries(nova PUBLIC ${MATH_LIBRARY})
+endif()
 
 add_library(Nova::libnova ALIAS nova)
 
@@ -131,11 +139,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         ARCHIVE
             DESTINATION ${CMAKE_INSTALL_LIBDIR}
             COMPONENT   development
-    )
-
-    install(
-        FILES       ${LIBRARY_PUBLIC_HEADERS}
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${HEADER_PATH}"
-        COMPONENT   development
+        FILE_SET HEADERS
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            COMPONENT   development
     )
 endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

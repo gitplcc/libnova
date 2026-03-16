@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...3.23)
+cmake_minimum_required(VERSION 3.23...4.2)
 
 project(libnova VERSION 0.16.1 LANGUAGES C)
 
@@ -137,16 +137,11 @@ configure_file(config.h.in.cmake config.h)
 check_ipo_supported(RESULT LN_HAVE_IPO_SUPPORT OUTPUT LN_IPO_ERRORINFO)
 if(LN_HAVE_IPO_SUPPORT)
     message(STATUS "IPO supported.")
-else(LN_HAVE_IPO_SUPPORT)
-    string(STRIP ${LN_IPO_ERRORINFO} LN_IPO_ERRORINFO)
-    message(WARNING "IPO unsupported: ${LN_IPO_ERRORINFO}.")
 endif(LN_HAVE_IPO_SUPPORT)
+
 check_pie_supported(OUTPUT_VARIABLE LN_PIE_ERRORINFO LANGUAGES C)
 if(CMAKE_C_LINK_PIE_SUPPORTED)
-    message(STATUS "PIE supported.")
-else(CMAKE_C_LINK_PIE_SUPPORTED)
-    string(STRIP ${LN_PIE_ERRORINFO} LN_PIE_ERRORINFO)
-    message(WARNING "PIE unsupported: ${LN_PIE_ERRORINFO}.")
+    message(STATUS "PIE/NO_PIE supported.")
 endif(CMAKE_C_LINK_PIE_SUPPORTED)
 
 # Compiler scpecific flags
@@ -192,13 +187,12 @@ macro(SETUP_EXECUTABLE EXECUTABLE_NAME)
     set_target_properties(${EXECUTABLE_NAME}
         PROPERTIES
             C_EXTENSIONS ON
-            $<$<BOOL:${LN_HAVE_IPO_SUPPORT}>:INTERPROCEDURAL_OPTIMIZATION TRUE>
+            INTERPROCEDURAL_OPTIMIZATION ${LN_HAVE_IPO_SUPPORT}
             $<$<BOOL:${CMAKE_C_LINK_PIE_SUPPORTED}>:POSITION_INDEPENDENT_CODE TRUE>
     )
     target_link_libraries(
         ${EXECUTABLE_NAME}
         nova
-        $<$<BOOL:${MATH_LIBRARY}>:${MATH_LIBRARY}>
     )
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
     if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

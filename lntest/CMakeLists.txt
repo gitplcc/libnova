@@ -16,7 +16,7 @@ macro(add_unit_test)
         ${TEST_NAME}
         PROPERTIES
             C_EXTENSIONS ON
-            $<$<BOOL:${LN_HAVE_IPO_SUPPORT}>:INTERPROCEDURAL_OPTIMIZATION TRUE>
+            INTERPROCEDURAL_OPTIMIZATION ${LN_HAVE_IPO_SUPPORT}
         )
     target_link_libraries(
         ${TEST_NAME}
